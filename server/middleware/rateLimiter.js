@@ -1,8 +1,10 @@
 const rateLimit = require('express-rate-limit');
 
-// Auth and AI routes will get stricter limiters when those routes are added.
+const WINDOW_MS = 15 * 60 * 1000;
+
+// AI routes will get their own stricter limiter when those routes are added.
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: WINDOW_MS,
   limit: 300,
   standardHeaders: 'draft-8',
   legacyHeaders: false,
@@ -13,4 +15,16 @@ const globalLimiter = rateLimit({
   },
 });
 
-module.exports = { globalLimiter };
+const authLimiter = rateLimit({
+  windowMs: WINDOW_MS,
+  limit: 10,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: {
+    error: {
+      message: 'Too many attempts. Try again later.',
+    },
+  },
+});
+
+module.exports = { globalLimiter, authLimiter };
