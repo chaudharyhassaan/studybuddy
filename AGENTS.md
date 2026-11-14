@@ -155,9 +155,12 @@ The site must not look vibecoded. Use the ui-ux-pro-max skill for design decisio
 ## Git workflow
 
 - The remote "origin" already exists. Do not create a new repo or change the remote.
-- After finishing every task, stage only the relevant files, commit with a clear message ("feat: ...", "fix: ...", "docs: ..."), and run `git push origin main`.
-- Before every commit, run `git status` and confirm no `.env` file, API key, `node_modules`, or build output is staged. If any is staged, unstage it and tell me.
-- Never run `git push --force`, `git reset --hard`, or delete branches without asking me.
+- Make small atomic commits. Commit after each logical unit of work, not once per task. Examples: one commit per model, per route, per controller, per middleware, per React page or component, per bug fix, per config change, per docs update.
+- Each commit must contain real, working changes that belong together. Never create empty commits, never touch files just to create a commit, never split one tiny change into several commits artificially.
+- Use conventional messages: "feat: add user model", "fix: handle expired jwt", "refactor: ...", "docs: ...", "chore: ...", "test: ...", "style: ...".
+- Push to origin main after every 2 to 3 commits, and always at the end of a task.
+- Before every commit, run `git status` and confirm no `.env`, secrets, `node_modules`, build output, logs, or editor files are staged. If anything unsafe is staged, unstage it and tell me.
+- Never force push, rewrite history, or squash commits. Do not run `git reset --hard` or delete branches without asking me.
 - If a push fails, show me the exact error and stop. Do not try to work around authentication.
 - Never print, request, or store my GitHub token or any password.
-- End each task with the commit hash and a one-line summary of what was pushed.
+- End each task with a list of the commits made (`git log --oneline` for that task).
