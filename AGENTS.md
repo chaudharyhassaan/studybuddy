@@ -151,3 +151,13 @@ The site must not look vibecoded. Use the ui-ux-pro-max skill for design decisio
 - [ ] `.env` is ignored, `.env.example` is current, startup fails loudly on missing variables.
 - [ ] Copy is plain, has no em dashes and makes no invented claims.
 - [ ] Relevant pages still render on a small screen and with the keyboard.
+
+## Git workflow
+
+- The remote "origin" already exists. Do not create a new repo or change the remote.
+- After finishing every task, stage only the relevant files, commit with a clear message ("feat: ...", "fix: ...", "docs: ..."), and run `git push origin main`.
+- Before every commit, run `git status` and confirm no `.env` file, API key, `node_modules`, or build output is staged. If any is staged, unstage it and tell me.
+- Never run `git push --force`, `git reset --hard`, or delete branches without asking me.
+- If a push fails, show me the exact error and stop. Do not try to work around authentication.
+- Never print, request, or store my GitHub token or any password.
+- End each task with the commit hash and a one-line summary of what was pushed.
