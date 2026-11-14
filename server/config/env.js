@@ -16,6 +16,8 @@ const REQUIRED_VARIABLES = [
 ];
 const NODE_ENVIRONMENTS = ['development', 'test', 'production'];
 const MIN_JWT_SECRET_LENGTH = 32;
+const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
+const GEMINI_MODEL_PATTERN = /^[a-z0-9][a-z0-9.-]*$/i;
 
 function fail(problems) {
   console.error('');
@@ -78,6 +80,23 @@ function readClientOrigins(raw, problems) {
   return origins;
 }
 
+function readGeminiModel(problems) {
+  const raw = process.env.GEMINI_MODEL;
+
+  if (raw === undefined || raw.trim() === '') {
+    return DEFAULT_GEMINI_MODEL;
+  }
+
+  const model = raw.trim();
+
+  if (!GEMINI_MODEL_PATTERN.test(model)) {
+    problems.push('GEMINI_MODEL must contain only letters, numbers, dots and dashes.');
+    return DEFAULT_GEMINI_MODEL;
+  }
+
+  return model;
+}
+
 function loadEnvironment() {
   const problems = [];
 
@@ -106,6 +125,7 @@ function loadEnvironment() {
 
   const clientOrigins = readClientOrigins(process.env.CLIENT_URL.trim(), problems);
   const port = readPort(problems);
+  const geminiModel = readGeminiModel(problems);
 
   if (problems.length > 0) {
     fail(problems);
@@ -118,6 +138,7 @@ function loadEnvironment() {
     mongoUri: process.env.MONGODB_URI.trim(),
     jwtSecret,
     geminiApiKey: process.env.GEMINI_API_KEY.trim(),
+    geminiModel,
     clientOrigins,
   });
 }
