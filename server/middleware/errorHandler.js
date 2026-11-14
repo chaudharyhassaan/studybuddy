@@ -7,6 +7,7 @@ const STATUS_MESSAGES = {
   404: 'Route not found.',
   413: 'Request body is too large.',
   429: 'Too many requests. Try again later.',
+  502: 'Plan generation failed. Try again.',
 };
 
 function notFound(req, res, next) {

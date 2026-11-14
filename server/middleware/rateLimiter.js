@@ -1,8 +1,7 @@
-const rateLimit = require('express-rate-limit');
+const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 
 const WINDOW_MS = 15 * 60 * 1000;
 
-// AI routes will get their own stricter limiter when those routes are added.
 const globalLimiter = rateLimit({
   windowMs: WINDOW_MS,
   limit: 300,
@@ -27,4 +26,18 @@ const authLimiter = rateLimit({
   },
 });
 
-module.exports = { globalLimiter, authLimiter };
+// Keyed by user because this limiter runs after requireAuth.
+const planLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  keyGenerator: (req) => (req.user ? `user:${req.user.id}` : ipKeyGenerator(req.ip)),
+  message: {
+    error: {
+      message: 'Plan generation limit reached. Try again later.',
+    },
+  },
+});
+
+module.exports = { globalLimiter, authLimiter, planLimiter };

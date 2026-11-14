@@ -7,6 +7,7 @@ const { globalLimiter } = require('./middleware/rateLimiter');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const planRoutes = require('./routes/plan.routes');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: false, limit: '10kb' }));
 
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/plans', planRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
