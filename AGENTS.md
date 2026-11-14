@@ -55,7 +55,7 @@ Keep server concerns separated: routes, controllers, models, middleware, validat
 - Secrets live in `.env`. `.env` is in `.gitignore` from the first commit. Never commit real keys.
 - Commit `.env.example` files that list variable names only, no values.
 - The server validates required environment variables at startup and fails loudly with a clear message and a non-zero exit when any are missing or empty.
-- Expected server variables: `NODE_ENV`, `PORT`, `MONGODB_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `CLIENT_ORIGIN`.
+- Expected server variables: `NODE_ENV`, `PORT`, `MONGODB_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `CLIENT_URL`.
 - Debug output is off in production. No stack traces or internal details in responses sent to the client.
 
 ## Security rules
