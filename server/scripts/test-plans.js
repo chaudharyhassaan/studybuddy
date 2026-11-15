@@ -93,6 +93,8 @@ async function main() {
   console.log('');
   console.log('Generating a plan with Gemini. This can take up to a minute.');
   console.log('');
+  console.log('This is the only AI-backed request in this script. Every later check reuses this plan.');
+  console.log('');
 
   const create = await call('/api/plans', { method: 'POST', body: payload, token: tokenA });
   report('create plan returns 201', create.status === 201, `status ${create.status}`);
