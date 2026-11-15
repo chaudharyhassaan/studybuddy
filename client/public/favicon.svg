@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="StudyBuddy">
+  <rect width="32" height="32" rx="3" fill="#8f4529" />
+  <text
+    x="16"
+    y="22.5"
+    text-anchor="middle"
+    font-family="Fraunces, Georgia, 'Times New Roman', serif"
+    font-size="20"
+    font-weight="600"
+    fill="#fbf8f0"
+  >S</text>
+</svg>

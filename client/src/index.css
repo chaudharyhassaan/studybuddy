@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  /* Remove the default theme so off-system colors, sizes and radii do not exist */
+  --color-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --container-*: initial;
+
+  /* Color */
+  --color-paper: #f4f0e6;
+  --color-surface: #faf7ef;
+  --color-sunken: #eae4d6;
+  --color-border: #d7cfbe;
+  --color-border-strong: #8b8371;
+  --color-ink: #23261f;
+  --color-ink-muted: #5e6458;
+  --color-accent: #8f4529;
+  --color-accent-hover: #7a3920;
+  --color-accent-pressed: #6b3119;
+  --color-accent-soft: #f1e3d5;
+  --color-on-accent: #fbf8f0;
+  --color-success: #2f6b45;
+  --color-warning: #8a5b12;
+  --color-error: #a63a2d;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+
+  --text-display: 3rem;
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-title: 2.25rem;
+  --text-title--line-height: 1.12;
+  --text-title--letter-spacing: -0.015em;
+
+  --text-h1: 2rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--letter-spacing: -0.01em;
+
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.3;
+  --text-h2--letter-spacing: -0.005em;
+
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.35;
+  --text-h3--letter-spacing: 0em;
+
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.6;
+
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.55;
+
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.45;
+  --text-xs--letter-spacing: 0.01em;
+
+  --text-2xs: 0.75rem;
+  --text-2xs--line-height: 1.4;
+  --text-2xs--letter-spacing: 0.08em;
+
+  /* Spacing: 4px base */
+  --spacing: 0.25rem;
+
+  /* Radius */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* Widths */
+  --container-content: 1120px;
+  --container-reading: 720px;
+  --container-form: 640px;
+  --container-auth: 400px;
+
+  /* Remove shadow utilities: depth comes from borders and tones */
+  --shadow-*: initial;
+  --drop-shadow-*: initial;
+
+  /* Only the tonal skeleton pulse remains */
+  --animate-*: initial;
+  --animate-pulse: pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
