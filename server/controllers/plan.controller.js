@@ -3,30 +3,7 @@ const Plan = require('../models/Plan');
 const Task = require('../models/Task');
 const { generateSchedule } = require('../services/ai');
 const { startOfUtcDay, toDateOnly, parseDateOnly } = require('../utils/date');
-
-function toPublicPlan(plan) {
-  return {
-    id: plan._id.toString(),
-    title: plan.title,
-    subject: plan.subject,
-    examDate: toDateOnly(plan.examDate),
-    hoursPerDay: plan.hoursPerDay,
-    topics: plan.topics,
-    createdAt: plan.createdAt,
-  };
-}
-
-function toPublicTask(task) {
-  return {
-    id: task._id.toString(),
-    planId: task.planId.toString(),
-    date: toDateOnly(task.date),
-    topic: task.topic,
-    description: task.description,
-    completed: task.completed,
-    completedAt: task.completedAt,
-  };
-}
+const { toPublicPlan, toPublicTask } = require('../utils/serializers');
 
 function planNotFound(res) {
   return res.status(404).json({
@@ -128,6 +105,50 @@ async function getPlan(req, res, next) {
   }
 }
 
+async function getPlanProgress(req, res, next) {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return planNotFound(res);
+  }
+
+  try {
+    const plan = await Plan.findOne({ _id: req.params.id, userId: req.user._id }).select('_id');
+
+    if (!plan) {
+      return planNotFound(res);
+    }
+
+    const tasks = await Task.find({ planId: plan._id, userId: req.user._id })
+      .select('date completed')
+      .lean();
+
+    const total = tasks.length;
+    const completed = tasks.filter((task) => task.completed).length;
+    const perDay = new Map();
+
+    for (const task of tasks) {
+      const date = toDateOnly(task.date);
+      const entry = perDay.get(date) || { date, completed: 0, total: 0 };
+      entry.total += 1;
+      if (task.completed) {
+        entry.completed += 1;
+      }
+      perDay.set(date, entry);
+    }
+
+    const days = Array.from(perDay.values()).sort((a, b) => a.date.localeCompare(b.date));
+
+    return res.json({
+      planId: plan._id.toString(),
+      completed,
+      total,
+      percentage: total === 0 ? 0 : Math.round((completed / total) * 100),
+      days,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 async function deletePlan(req, res, next) {
   if (!mongoose.isValidObjectId(req.params.id)) {
     return planNotFound(res);
@@ -151,4 +172,4 @@ async function deletePlan(req, res, next) {
   }
 }
 
-module.exports = { createPlan, listPlans, getPlan, deletePlan };
+module.exports = { createPlan, listPlans, getPlan, getPlanProgress, deletePlan };
