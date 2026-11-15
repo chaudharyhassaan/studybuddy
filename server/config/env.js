@@ -18,6 +18,9 @@ const NODE_ENVIRONMENTS = ['development', 'test', 'production'];
 const MIN_JWT_SECRET_LENGTH = 32;
 const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
 const DEFAULT_GEMINI_FALLBACK_MODEL = 'gemini-3.5-flash';
+const DEFAULT_AI_DAILY_LIMIT = 15;
+const MIN_AI_DAILY_LIMIT = 1;
+const MAX_AI_DAILY_LIMIT = 1000;
 const GEMINI_MODEL_PATTERN = /^[a-z0-9][a-z0-9.-]*$/i;
 
 function fail(problems) {
@@ -98,6 +101,31 @@ function readModel(name, defaultValue, problems) {
   return model;
 }
 
+function readAiDailyLimit(problems) {
+  const raw = process.env.AI_DAILY_LIMIT;
+
+  if (raw === undefined || raw.trim() === '') {
+    return DEFAULT_AI_DAILY_LIMIT;
+  }
+
+  const value = raw.trim();
+  const parsed = Number(value);
+
+  if (
+    !/^\d+$/.test(value) ||
+    !Number.isInteger(parsed) ||
+    parsed < MIN_AI_DAILY_LIMIT ||
+    parsed > MAX_AI_DAILY_LIMIT
+  ) {
+    problems.push(
+      `AI_DAILY_LIMIT must be a whole number between ${MIN_AI_DAILY_LIMIT} and ${MAX_AI_DAILY_LIMIT}.`
+    );
+    return DEFAULT_AI_DAILY_LIMIT;
+  }
+
+  return parsed;
+}
+
 function loadEnvironment() {
   const problems = [];
 
@@ -132,6 +160,7 @@ function loadEnvironment() {
     DEFAULT_GEMINI_FALLBACK_MODEL,
     problems
   );
+  const aiDailyLimit = readAiDailyLimit(problems);
 
   if (problems.length > 0) {
     fail(problems);
@@ -146,6 +175,7 @@ function loadEnvironment() {
     geminiApiKey: process.env.GEMINI_API_KEY.trim(),
     geminiModel,
     geminiFallbackModel,
+    aiDailyLimit,
     clientOrigins,
   });
 }

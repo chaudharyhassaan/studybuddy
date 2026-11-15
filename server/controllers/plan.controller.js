@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Plan = require('../models/Plan');
 const Task = require('../models/Task');
 const { generateSchedule } = require('../services/ai');
+const { consumeAiBudget, AI_LIMIT_MESSAGE } = require('../services/aiBudget');
 const { startOfUtcDay, toDateOnly, parseDateOnly } = require('../utils/date');
 const { toPublicPlan, toPublicTask } = require('../utils/serializers');
 
@@ -16,6 +17,12 @@ function planNotFound(res) {
 async function createPlan(req, res, next) {
   const { title, subject, examDate, hoursPerDay, topics } = req.body;
   const startDate = toDateOnly(startOfUtcDay());
+
+  const budget = consumeAiBudget(req.user._id);
+
+  if (!budget.allowed) {
+    return res.status(429).json({ error: { message: AI_LIMIT_MESSAGE } });
+  }
 
   let tasks;
 
