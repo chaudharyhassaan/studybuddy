@@ -133,6 +133,66 @@ async function main() {
     `${(detail.data?.tasks || []).length} tasks`
   );
 
+  const firstTask = createdTasks[0];
+
+  const toggleOn = await call(`/api/tasks/${firstTask.id}/toggle`, {
+    method: 'PATCH',
+    token: tokenA,
+  });
+  report(
+    'owner toggle completes the task',
+    toggleOn.status === 200 && toggleOn.data?.task?.completed === true,
+    `status ${toggleOn.status}`
+  );
+  report('first completion sets the streak to 1', toggleOn.data?.streak === 1, `streak ${toggleOn.data?.streak}`);
+
+  const progress = await call(`/api/plans/${plan.id}/progress`, { token: tokenA });
+  report('progress returns 200', progress.status === 200, `status ${progress.status}`);
+  report(
+    'progress counts the completed task',
+    progress.data?.completed === 1 && progress.data?.total === createdTasks.length,
+    `${progress.data?.completed} of ${progress.data?.total}`
+  );
+  report(
+    'progress percentage is correct',
+    progress.data?.percentage === Math.round((1 / createdTasks.length) * 100),
+    `${progress.data?.percentage}%`
+  );
+  report(
+    'progress includes per-day counts',
+    Array.isArray(progress.data?.days) &&
+      progress.data.days.some((day) => day.date === firstTask.date && day.completed === 1)
+  );
+
+  const meAfterToggle = await call('/api/auth/me', { token: tokenA });
+  report('me reports the new streak', meAfterToggle.data?.user?.streak === 1);
+
+  const otherUserToggle = await call(`/api/tasks/${firstTask.id}/toggle`, {
+    method: 'PATCH',
+    token: tokenB,
+  });
+  report('other user cannot toggle the task', otherUserToggle.status === 404, `status ${otherUserToggle.status}`);
+
+  const otherUserProgress = await call(`/api/plans/${plan.id}/progress`, { token: tokenB });
+  report('other user cannot read progress', otherUserProgress.status === 404, `status ${otherUserProgress.status}`);
+
+  const anonymousToggle = await call(`/api/tasks/${firstTask.id}/toggle`, { method: 'PATCH' });
+  report('toggle without a token returns 401', anonymousToggle.status === 401, `status ${anonymousToggle.status}`);
+
+  const toggleOff = await call(`/api/tasks/${firstTask.id}/toggle`, {
+    method: 'PATCH',
+    token: tokenA,
+  });
+  report(
+    'owner toggle uncompletes the task',
+    toggleOff.status === 200 && toggleOff.data?.task?.completed === false,
+    `status ${toggleOff.status}`
+  );
+  report('uncompleting leaves completedAt null', toggleOff.data?.task?.completedAt === null);
+
+  const progressAfterToggleOff = await call(`/api/plans/${plan.id}/progress`, { token: tokenA });
+  report('progress returns to zero', progressAfterToggleOff.data?.completed === 0);
+
   const otherUserDetail = await call(`/api/plans/${plan.id}`, { token: tokenB });
   report('other user gets 404', otherUserDetail.status === 404, `status ${otherUserDetail.status}`);
 
@@ -169,6 +229,9 @@ async function main() {
   const afterDelete = await call(`/api/plans/${plan.id}`, { token: tokenA });
   report('deleted plan returns 404', afterDelete.status === 404, `status ${afterDelete.status}`);
 
+  const progressAfterDelete = await call(`/api/plans/${plan.id}/progress`, { token: tokenA });
+  report('deleted plan progress returns 404', progressAfterDelete.status === 404, `status ${progressAfterDelete.status}`);
+
   const listAfterDelete = await call('/api/plans', { token: tokenA });
   report(
     'deleted plan leaves the list',
@@ -182,7 +245,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log('All plan checks passed.');
+  console.log('All plan and task checks passed.');
 }
 
 main().catch((error) => {
