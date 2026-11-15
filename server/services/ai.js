@@ -4,7 +4,10 @@ const { parseDateOnly, isRealCalendarDate } = require('../utils/date');
 
 const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
 const MAX_ATTEMPTS = 2;
+const FALLBACK_ATTEMPTS = 1;
 const REQUEST_TIMEOUT_MS = 60000;
+const RETRYABLE_STATUSES = new Set([429, 503]);
+const FALLBACK_ONLY_STATUSES = new Set([404]);
 
 const SYSTEM_INSTRUCTION =
   'You are a study planner for students. You reply with valid JSON only, with no markdown, no code fences and no commentary.';
@@ -32,6 +35,25 @@ class AiServiceError extends Error {
     super(message, options);
     this.name = 'AiServiceError';
   }
+}
+
+class GeminiRequestError extends Error {
+  constructor(message, { status = null, retryable = false, allowFallback = true, cause } = {}) {
+    super(message, { cause });
+    this.name = 'GeminiRequestError';
+    this.status = status;
+    this.retryable = retryable;
+    this.allowFallback = allowFallback;
+  }
+}
+
+function toRequestError(error) {
+  const timedOut = error?.name === 'TimeoutError' || error?.name === 'AbortError';
+
+  return new GeminiRequestError(
+    timedOut ? 'Gemini request timed out.' : 'Gemini request failed.',
+    { retryable: true, cause: error }
+  );
 }
 
 function stripMarkdownFences(text) {
@@ -75,35 +97,50 @@ function buildPrompt({ subject, topics, examDate, hoursPerDay, startDate }) {
   ].join('\n');
 }
 
-async function callGemini(prompt) {
-  const response = await fetch(`${GEMINI_ENDPOINT}/${env.geminiModel}:generateContent`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': env.geminiApiKey,
-    },
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: SYSTEM_INSTRUCTION }],
+async function callGemini(model, prompt) {
+  let response;
+
+  try {
+    response = await fetch(`${GEMINI_ENDPOINT}/${model}:generateContent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': env.geminiApiKey,
       },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: prompt }],
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: SYSTEM_INSTRUCTION }],
         },
-      ],
-      generationConfig: {
-        temperature: 0.4,
-        maxOutputTokens: 16384,
-        responseMimeType: 'application/json',
-      },
-    }),
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-  });
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.4,
+          maxOutputTokens: 16384,
+          responseMimeType: 'application/json',
+        },
+      }),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+  } catch (error) {
+    throw toRequestError(error);
+  }
 
   if (!response.ok) {
     const detail = await response.text().catch(() => '');
-    throw new Error(`Gemini responded with status ${response.status}. ${detail.slice(0, 300)}`);
+    const retryable = RETRYABLE_STATUSES.has(response.status);
+
+    throw new GeminiRequestError(
+      `Gemini responded with status ${response.status}. ${detail.slice(0, 300)}`,
+      {
+        status: response.status,
+        retryable,
+        allowFallback: retryable || FALLBACK_ONLY_STATUSES.has(response.status),
+      }
+    );
   }
 
   const data = await response.json();
@@ -159,18 +196,43 @@ function normalizeSchedule(items, { topics, startDate, examDate }) {
   return tasks;
 }
 
+function modelPlan() {
+  const models = [
+    { name: env.geminiModel, attempts: MAX_ATTEMPTS },
+    { name: env.geminiFallbackModel, attempts: FALLBACK_ATTEMPTS },
+  ];
+
+  return models.filter(
+    (model, index) => model.name && models.findIndex((other) => other.name === model.name) === index
+  );
+}
+
 async function generateValidated(prompt, normalize) {
   let lastError;
 
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
-    try {
-      const text = stripMarkdownFences(await callGemini(prompt));
-      const parsed = scheduleSchema.parse(parseJson(text));
-      return normalize(parsed);
-    } catch (error) {
-      lastError = error;
-      if (!env.isProduction) {
-        console.error(`Gemini attempt ${attempt} failed:`, error.message);
+  for (const model of modelPlan()) {
+    for (let attempt = 1; attempt <= model.attempts; attempt += 1) {
+      try {
+        const text = stripMarkdownFences(await callGemini(model.name, prompt));
+        const parsed = scheduleSchema.parse(parseJson(text));
+        return normalize(parsed);
+      } catch (error) {
+        lastError = error;
+
+        if (!env.isProduction) {
+          console.error(`${model.name} attempt ${attempt} failed:`, error.message);
+        }
+
+        const retryable = error instanceof GeminiRequestError ? error.retryable : true;
+        const allowFallback = error instanceof GeminiRequestError ? error.allowFallback : true;
+
+        if (!allowFallback) {
+          throw new AiServiceError('Plan generation failed.', { cause: lastError });
+        }
+
+        if (!retryable) {
+          break;
+        }
       }
     }
   }

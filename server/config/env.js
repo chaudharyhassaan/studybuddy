@@ -17,6 +17,7 @@ const REQUIRED_VARIABLES = [
 const NODE_ENVIRONMENTS = ['development', 'test', 'production'];
 const MIN_JWT_SECRET_LENGTH = 32;
 const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
+const DEFAULT_GEMINI_FALLBACK_MODEL = 'gemini-3.5-flash';
 const GEMINI_MODEL_PATTERN = /^[a-z0-9][a-z0-9.-]*$/i;
 
 function fail(problems) {
@@ -80,18 +81,18 @@ function readClientOrigins(raw, problems) {
   return origins;
 }
 
-function readGeminiModel(problems) {
-  const raw = process.env.GEMINI_MODEL;
+function readModel(name, defaultValue, problems) {
+  const raw = process.env[name];
 
   if (raw === undefined || raw.trim() === '') {
-    return DEFAULT_GEMINI_MODEL;
+    return defaultValue;
   }
 
   const model = raw.trim();
 
   if (!GEMINI_MODEL_PATTERN.test(model)) {
-    problems.push('GEMINI_MODEL must contain only letters, numbers, dots and dashes.');
-    return DEFAULT_GEMINI_MODEL;
+    problems.push(`${name} must contain only letters, numbers, dots and dashes.`);
+    return defaultValue;
   }
 
   return model;
@@ -125,7 +126,12 @@ function loadEnvironment() {
 
   const clientOrigins = readClientOrigins(process.env.CLIENT_URL.trim(), problems);
   const port = readPort(problems);
-  const geminiModel = readGeminiModel(problems);
+  const geminiModel = readModel('GEMINI_MODEL', DEFAULT_GEMINI_MODEL, problems);
+  const geminiFallbackModel = readModel(
+    'GEMINI_FALLBACK_MODEL',
+    DEFAULT_GEMINI_FALLBACK_MODEL,
+    problems
+  );
 
   if (problems.length > 0) {
     fail(problems);
@@ -139,6 +145,7 @@ function loadEnvironment() {
     jwtSecret,
     geminiApiKey: process.env.GEMINI_API_KEY.trim(),
     geminiModel,
+    geminiFallbackModel,
     clientOrigins,
   });
 }
