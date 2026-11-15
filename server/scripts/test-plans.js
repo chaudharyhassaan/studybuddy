@@ -1,3 +1,8 @@
+const mongoose = require('mongoose');
+const env = require('../config/env');
+const Quiz = require('../models/Quiz');
+const Flashcard = require('../models/Flashcard');
+
 const BASE_URL = process.env.API_URL || 'http://localhost:5000';
 const stamp = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const password = 'StudyBuddy123!';
@@ -67,15 +72,19 @@ async function main() {
   const registerA = await call('/api/auth/register', { method: 'POST', body: userA });
   report('register user A returns 201', registerA.status === 201, `status ${registerA.status}`);
   const tokenA = registerA.data?.token;
+  const userAId = registerA.data?.user?.id;
 
   const registerB = await call('/api/auth/register', { method: 'POST', body: userB });
   report('register user B returns 201', registerB.status === 201, `status ${registerB.status}`);
   const tokenB = registerB.data?.token;
+  const userBId = registerB.data?.user?.id;
 
-  if (!tokenA || !tokenB) {
+  if (!tokenA || !tokenB || !userAId || !userBId) {
     console.log('Cannot continue without both tokens.');
     process.exit(1);
   }
+
+  await mongoose.connect(env.mongoUri);
 
   const anonymousCreate = await call('/api/plans', {
     method: 'POST',
@@ -102,6 +111,7 @@ async function main() {
   if (create.status !== 201) {
     console.log('Response:', JSON.stringify(create.data));
     console.log(`${failures} check(s) failed.`);
+    await mongoose.disconnect();
     process.exit(1);
   }
 
@@ -225,8 +235,89 @@ async function main() {
   });
   report('0.25 hours returns 400', tooFewHours.status === 400, `status ${tooFewHours.status}`);
 
+  // Cascade check: these are inserted directly, so they cost no Gemini calls.
+  const directQuiz = await Quiz.create({
+    userId: userAId,
+    planId: plan.id,
+    topic: 'Cell structure',
+    questions: [
+      {
+        question: 'What controls what enters a cell?',
+        options: ['Cell membrane', 'Nucleus', 'Ribosome', 'Vacuole'],
+        answerIndex: 0,
+        explanation: 'The cell membrane is selectively permeable.',
+      },
+      {
+        question: 'Where is DNA stored?',
+        options: ['Cytoplasm', 'Nucleus', 'Golgi body', 'Lysosome'],
+        answerIndex: 1,
+        explanation: 'The nucleus holds the cell DNA.',
+      },
+      {
+        question: 'Which organelle makes proteins?',
+        options: ['Mitochondrion', 'Ribosome', 'Vacuole', 'Centriole'],
+        answerIndex: 1,
+        explanation: 'Ribosomes translate RNA into protein.',
+      },
+    ],
+  });
+
+  const directDeck = await Flashcard.create({
+    userId: userAId,
+    planId: plan.id,
+    topic: 'Photosynthesis',
+    cards: [
+      { front: 'What is photosynthesis?', back: 'Plants making sugar from light.' },
+      { front: 'Where does it happen?', back: 'In the chloroplasts.' },
+      { front: 'Which gas is taken in?', back: 'Carbon dioxide.' },
+      { front: 'Which gas is released?', back: 'Oxygen.' },
+      { front: 'What pigment absorbs light?', back: 'Chlorophyll.' },
+    ],
+  });
+
+  report(
+    'quiz and deck inserted for the cascade check',
+    Boolean(directQuiz._id && directDeck._id)
+  );
+
+  // Owned by another user, so the scoped delete below must leave it alone.
+  const foreignQuiz = await Quiz.create({
+    userId: userBId,
+    planId: plan.id,
+    topic: 'Cell structure',
+    questions: [
+      {
+        question: 'What controls what enters a cell?',
+        options: ['Cell membrane', 'Nucleus', 'Ribosome', 'Vacuole'],
+        answerIndex: 0,
+        explanation: 'The cell membrane is selectively permeable.',
+      },
+      {
+        question: 'Where is DNA stored?',
+        options: ['Cytoplasm', 'Nucleus', 'Golgi body', 'Lysosome'],
+        answerIndex: 1,
+        explanation: 'The nucleus holds the cell DNA.',
+      },
+      {
+        question: 'Which organelle makes proteins?',
+        options: ['Mitochondrion', 'Ribosome', 'Vacuole', 'Centriole'],
+        answerIndex: 1,
+        explanation: 'Ribosomes translate RNA into protein.',
+      },
+    ],
+  });
+
   const remove = await call(`/api/plans/${plan.id}`, { method: 'DELETE', token: tokenA });
   report('owner delete returns 204', remove.status === 204, `status ${remove.status}`);
+
+  const quizzesLeft = await Quiz.countDocuments({ planId: plan.id, userId: userAId });
+  const decksLeft = await Flashcard.countDocuments({ planId: plan.id, userId: userAId });
+  report('deleting a plan removes its quizzes', quizzesLeft === 0, `${quizzesLeft} left`);
+  report('deleting a plan removes its flashcard decks', decksLeft === 0, `${decksLeft} left`);
+
+  const foreignLeft = await Quiz.countDocuments({ _id: foreignQuiz._id, userId: userBId });
+  report("deleting a plan leaves another user's quiz alone", foreignLeft === 1, `${foreignLeft} left`);
+  await Quiz.deleteOne({ _id: foreignQuiz._id });
 
   const afterDelete = await call(`/api/plans/${plan.id}`, { token: tokenA });
   report('deleted plan returns 404', afterDelete.status === 404, `status ${afterDelete.status}`);
@@ -244,13 +335,16 @@ async function main() {
 
   if (failures > 0) {
     console.log(`${failures} check(s) failed.`);
+    await mongoose.disconnect();
     process.exit(1);
   }
 
+  await mongoose.disconnect();
   console.log('All plan and task checks passed.');
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   console.error('Test script failed:', error.message);
+  await mongoose.disconnect().catch(() => {});
   process.exit(1);
 });

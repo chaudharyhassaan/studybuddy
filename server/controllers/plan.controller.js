@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Plan = require('../models/Plan');
 const Task = require('../models/Task');
+const Quiz = require('../models/Quiz');
+const Flashcard = require('../models/Flashcard');
 const { generateSchedule } = require('../services/ai');
 const { consumeAiBudget, AI_LIMIT_MESSAGE } = require('../services/aiBudget');
 const { startOfUtcDay, toDateOnly, parseDateOnly } = require('../utils/date');
@@ -171,7 +173,11 @@ async function deletePlan(req, res, next) {
       return planNotFound(res);
     }
 
-    await Task.deleteMany({ planId: plan._id, userId: req.user._id });
+    await Promise.all([
+      Task.deleteMany({ planId: plan._id, userId: req.user._id }),
+      Quiz.deleteMany({ planId: plan._id, userId: req.user._id }),
+      Flashcard.deleteMany({ planId: plan._id, userId: req.user._id }),
+    ]);
 
     return res.status(204).send();
   } catch (error) {
