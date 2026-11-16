@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { List } from '@phosphor-icons/react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
 import Wordmark from '../components/Wordmark';
@@ -12,10 +12,24 @@ const navLinkClass = ({ isActive }) =>
       : 'border-transparent text-ink-muted hover:bg-sunken hover:text-ink'
   }`;
 
+function headerTitle(pathname) {
+  if (pathname === '/plans/new') {
+    return 'Create plan';
+  }
+
+  if (pathname.startsWith('/plans/')) {
+    return 'Plan';
+  }
+
+  return 'Dashboard';
+}
+
 export default function AppLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const pageTitle = headerTitle(pathname);
 
   function handleLogout() {
     logout();
@@ -32,6 +46,9 @@ export default function AppLayout() {
           <nav aria-label="Main" className="flex-1 p-3">
             <NavLink to="/dashboard" className={navLinkClass}>
               Dashboard
+            </NavLink>
+            <NavLink to="/plans/new" className={navLinkClass}>
+              Create plan
             </NavLink>
           </nav>
           <div className="border-t border-border p-4">
@@ -50,7 +67,7 @@ export default function AppLayout() {
           <header className="flex h-16 items-center justify-between border-b border-border bg-paper px-4 md:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <Wordmark size="sm" className="md:hidden" />
-              <span className="hidden text-sm font-semibold text-ink md:inline">Dashboard</span>
+              <span className="hidden text-sm font-semibold text-ink md:inline">{pageTitle}</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden max-w-40 truncate text-xs text-ink-muted sm:inline">
@@ -77,6 +94,13 @@ export default function AppLayout() {
                   onClick={() => setMenuOpen(false)}
                 >
                   Dashboard
+                </NavLink>
+                <NavLink
+                  to="/plans/new"
+                  className={navLinkClass}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Create plan
                 </NavLink>
               </nav>
               <div className="mt-4 border-t border-border pt-4">

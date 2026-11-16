@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/useAuth';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -12,6 +13,25 @@ import NotFound from './pages/NotFound';
 import Privacy from './pages/Privacy';
 import Register from './pages/Register';
 import Terms from './pages/Terms';
+
+const CreatePlan = lazy(() => import('./pages/CreatePlan'));
+const PlanDetail = lazy(() => import('./pages/PlanDetail'));
+
+function PageFallback() {
+  return (
+    <div aria-busy="true" aria-live="polite">
+      <div aria-hidden="true" className="h-8 w-56 rounded-sm bg-sunken motion-safe:animate-pulse" />
+      <div
+        aria-hidden="true"
+        className="mt-3 h-4 w-72 max-w-full rounded-sm bg-sunken motion-safe:animate-pulse"
+      />
+      <div
+        aria-hidden="true"
+        className="mt-8 h-64 w-full rounded-md border border-border bg-surface"
+      />
+    </div>
+  );
+}
 
 function HomeRedirect() {
   const { user, loading } = useAuth();
@@ -34,6 +54,22 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/plans/new"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <CreatePlan />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/plans/:id"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <PlanDetail />
+              </Suspense>
+            }
+          />
         </Route>
       </Route>
       <Route element={<ReadingLayout />}>
