@@ -33,8 +33,12 @@ export function AuthProvider({ children }) {
         if (!cancelled) {
           setUser(data.user);
         }
-      } catch {
-        localStorage.removeItem(TOKEN_KEY);
+      } catch (error) {
+        // Keep the token on temporary failures (rate limits, network, 5xx) so the
+        // session survives once the API recovers. Only a rejected token is cleared.
+        if (error?.response?.status === 401) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
 
         if (!cancelled) {
           setUser(null);
