@@ -17,6 +17,10 @@ function headerTitle(pathname) {
     return 'Create plan';
   }
 
+  if (pathname === '/settings') {
+    return 'Settings';
+  }
+
   if (pathname.startsWith('/plans/')) {
     return 'Plan';
   }
@@ -49,6 +53,9 @@ export default function AppLayout() {
             </NavLink>
             <NavLink to="/plans/new" className={navLinkClass}>
               Create plan
+            </NavLink>
+            <NavLink to="/settings" className={navLinkClass}>
+              Settings
             </NavLink>
           </nav>
           <div className="border-t border-border p-4">
@@ -101,6 +108,13 @@ export default function AppLayout() {
                   onClick={() => setMenuOpen(false)}
                 >
                   Create plan
+                </NavLink>
+                <NavLink
+                  to="/settings"
+                  className={navLinkClass}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Settings
                 </NavLink>
               </nav>
               <div className="mt-4 border-t border-border pt-4">

@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Privacy from './pages/Privacy';
 import Register from './pages/Register';
+import Settings from './pages/Settings';
 import Terms from './pages/Terms';
 
 const CreatePlan = lazy(() => import('./pages/CreatePlan'));
@@ -46,6 +47,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/settings" element={<Settings />} />
           <Route
             path="/plans/new"
             element={
