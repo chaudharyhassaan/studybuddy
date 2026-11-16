@@ -53,7 +53,6 @@ userSchema.methods.toPublicJSON = function toPublicJSON() {
   };
 };
 
-// Account deletion: a future DELETE /api/auth/me must remove this user's plans,
-// tasks, quizzes and flashcards, all scoped to this user's id. No such endpoint
-// exists yet; add that cascade before exposing one.
+// Account deletion lives in DELETE /api/auth/me. It removes the user's plans,
+// tasks, quizzes and flashcards, all scoped to this user's id, then the user.
 module.exports = mongoose.model('User', userSchema);

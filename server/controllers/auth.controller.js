@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const User = require('../models/User');
+const { deleteAccountData } = require('../services/account');
 
 const BCRYPT_ROUNDS = 12;
 const TOKEN_TTL = '7d';
@@ -78,4 +79,13 @@ function me(req, res) {
   return res.json({ user: req.user.toPublicJSON() });
 }
 
-module.exports = { register, login, me };
+async function deleteAccount(req, res, next) {
+  try {
+    await deleteAccountData(req.user._id);
+    return res.status(204).send();
+  } catch (error) {
+    return next(error);
+  }
+}
+
+module.exports = { register, login, me, deleteAccount };
