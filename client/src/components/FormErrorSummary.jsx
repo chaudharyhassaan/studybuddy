@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 
 const FormErrorSummary = forwardRef(function FormErrorSummary({ message, errors = {} }, ref) {
-  const entries = Object.entries(errors);
+  const entries = Object.entries(errors).filter(([, text]) => Boolean(text));
 
   if (!message && entries.length === 0) {
     return null;

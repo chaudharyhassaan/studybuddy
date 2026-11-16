@@ -77,7 +77,7 @@ export default function Login() {
       <form noValidate onSubmit={handleSubmit} aria-busy={submitting} className="mt-6 space-y-5">
         <FormErrorSummary
           ref={summaryRef}
-          message={formError || (submitCount > 0 && Object.keys(errors).length > 0 ? 'Check the fields below.' : '')}
+          message={formError || (submitCount > 0 && Object.values(errors).some(Boolean) ? 'Check the fields below.' : '')}
           errors={submitCount > 0 ? errors : {}}
         />
         <TextField

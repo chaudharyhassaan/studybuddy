@@ -93,7 +93,7 @@ export default function Register() {
             ref={summaryRef}
             message={
               formError ||
-              (submitCount > 0 && Object.keys(errors).length > 0 ? 'Check the fields below.' : '')
+              (submitCount > 0 && Object.values(errors).some(Boolean) ? 'Check the fields below.' : '')
             }
             errors={submitCount > 0 ? errors : {}}
           />

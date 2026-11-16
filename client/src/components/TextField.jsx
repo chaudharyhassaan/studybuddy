@@ -8,6 +8,10 @@ export default function TextField({
   error,
   helper,
   autoComplete,
+  placeholder,
+  min,
+  max,
+  step,
   required = false,
 }) {
   const describedBy =
@@ -27,6 +31,10 @@ export default function TextField({
         onChange={onChange}
         onBlur={onBlur}
         autoComplete={autoComplete}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        step={step}
         required={required}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={describedBy}
