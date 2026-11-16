@@ -372,6 +372,11 @@ export default function PlanDetail() {
                 </ResponsiveContainer>
               </div>
             )}
+            {chartData.length > 0 && progress.completed === 0 ? (
+              <p className="mt-2 text-xs text-ink-muted">
+                No tasks completed yet. Each bar fills in as you check tasks off.
+              </p>
+            ) : null}
           </section>
 
           <section aria-labelledby="schedule-heading">
@@ -398,7 +403,7 @@ export default function PlanDetail() {
                       </h3>
                       <p className="text-xs text-ink-muted">
                         {plural(group.tasks.length, 'task')}
-                        {isToday(group.date) ? ', Today' : ''}
+                        {isToday(group.date) ? ', today' : ''}
                       </p>
                     </div>
                     <ul>
@@ -471,7 +476,9 @@ export default function PlanDetail() {
                 <p className="mt-1 font-display text-h1 font-semibold tabular-nums text-ink">
                   {todayProgress.completed} of {todayProgress.total}
                 </p>
-                <p className="mt-1 text-xs text-ink-muted">tasks complete</p>
+                <p className="mt-1 text-xs text-ink-muted">
+                  {todayProgress.total === 1 ? 'task complete' : 'tasks complete'}
+                </p>
               </>
             )}
           </div>
