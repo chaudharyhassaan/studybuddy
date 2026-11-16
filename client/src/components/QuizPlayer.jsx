@@ -21,7 +21,7 @@ function optionStateClass(answered, isAnswer, isChosen) {
   return isChosen ? 'border-error' : 'border-border';
 }
 
-export default function QuizPlayer({ questions }) {
+export default function QuizPlayer({ questions, autoFocus = true }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [finished, setFinished] = useState(false);
@@ -48,18 +48,22 @@ export default function QuizPlayer({ questions }) {
       return;
     }
 
+    if (!autoFocus) {
+      return;
+    }
+
     if (finished) {
       scoreRef.current?.focus();
     } else {
       questionRef.current?.focus();
     }
-  }, [current, finished]);
+  }, [current, finished, autoFocus]);
 
   useEffect(() => {
-    if (answered) {
+    if (answered && autoFocus) {
       nextRef.current?.focus();
     }
-  }, [answered]);
+  }, [answered, autoFocus]);
 
   function choose(index) {
     if (answered) {

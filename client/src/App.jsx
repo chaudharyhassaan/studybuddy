@@ -1,13 +1,12 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAuth } from './context/useAuth';
+import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
-import RouteSkeleton from './components/RouteSkeleton';
 import AppLayout from './layouts/AppLayout';
 import AuthLayout from './layouts/AuthLayout';
 import MarketingLayout from './layouts/MarketingLayout';
 import ReadingLayout from './layouts/ReadingLayout';
 import Dashboard from './pages/Dashboard';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Privacy from './pages/Privacy';
@@ -33,20 +32,13 @@ function PageFallback() {
   );
 }
 
-function HomeRedirect() {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <RouteSkeleton />;
-  }
-
-  return <Navigate to={user ? '/dashboard' : '/login'} replace />;
-}
-
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomeRedirect />} />
+      <Route element={<MarketingLayout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -75,9 +67,6 @@ export default function App() {
       <Route element={<ReadingLayout />}>
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
-      </Route>
-      <Route element={<MarketingLayout />}>
-        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
