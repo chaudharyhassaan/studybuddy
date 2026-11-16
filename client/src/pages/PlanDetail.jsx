@@ -17,6 +17,7 @@ import PrimaryButton, {
   secondaryButtonClass,
 } from '../components/PrimaryButton';
 import ProgressBar from '../components/ProgressBar';
+import StudyTools from '../components/StudyTools';
 import {
   chartDataFor,
   countdownLabel,
@@ -447,6 +448,8 @@ export default function PlanDetail() {
               </div>
             )}
           </section>
+
+          <StudyTools planId={plan.id} topics={plan.topics ?? []} />
         </div>
 
         <aside className="space-y-4 xl:col-span-4">
