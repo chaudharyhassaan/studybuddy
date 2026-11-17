@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { getErrorMessage } from '../lib/api';
 import { validateEmail, validateName, validateNewPassword, validateRegister } from '../lib/validation';
+import { usePageTitle } from '../lib/usePageTitle';
 import FormErrorSummary from '../components/FormErrorSummary';
 import PrimaryButton from '../components/PrimaryButton';
 import TextField from '../components/TextField';
@@ -30,6 +31,8 @@ export default function Register() {
   const [submitCount, setSubmitCount] = useState(0);
   const [focusRequest, setFocusRequest] = useState(0);
   const summaryRef = useRef(null);
+
+  usePageTitle('Create your account');
 
   useEffect(() => {
     if (focusRequest > 0 && summaryRef.current) {

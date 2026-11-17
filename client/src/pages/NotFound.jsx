@@ -1,10 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { primaryButtonClass } from '../components/PrimaryButton';
+import { usePageTitle } from '../lib/usePageTitle';
 
 export default function NotFound() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  usePageTitle('Page not found');
 
   return (
     <div className="mx-auto flex max-w-[480px] flex-col items-center px-4 py-24 text-center">

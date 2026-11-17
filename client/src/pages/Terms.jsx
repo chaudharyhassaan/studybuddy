@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const linkClass =
   'text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover';
@@ -6,6 +7,8 @@ const linkClass =
 const sectionClass = 'border-t border-border pt-6';
 
 export default function Terms() {
+  usePageTitle('Terms of Service');
+
   return (
     <article className="mx-auto max-w-reading">
       <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api, getErrorMessage } from '../lib/api';
 import { useAuth } from '../context/useAuth';
 import { destructiveButtonClass, secondaryButtonClass } from '../components/PrimaryButton';
+import { usePageTitle } from '../lib/usePageTitle';
 
 export default function Settings() {
   const { user, logout } = useAuth();
@@ -11,6 +12,8 @@ export default function Settings() {
   const triggerRef = useRef(null);
   const [deleteError, setDeleteError] = useState('');
   const [deleting, setDeleting] = useState(false);
+
+  usePageTitle('Settings');
 
   function openDialog() {
     setDeleteError('');

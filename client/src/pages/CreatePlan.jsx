@@ -12,6 +12,7 @@ import {
 import FormErrorSummary from '../components/FormErrorSummary';
 import PrimaryButton, { secondaryButtonClass } from '../components/PrimaryButton';
 import TextField from '../components/TextField';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const topicInputClass =
   'block h-11 w-full min-w-0 rounded-sm border bg-surface px-3 text-base text-ink placeholder:text-ink-muted transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:bg-sunken disabled:text-ink-muted md:h-10';
@@ -40,6 +41,8 @@ export default function CreatePlan() {
   const [submitCount, setSubmitCount] = useState(0);
   const [focusRequest, setFocusRequest] = useState(0);
   const summaryRef = useRef(null);
+
+  usePageTitle('Create a plan');
 
   useEffect(() => {
     if (focusRequest > 0 && summaryRef.current) {

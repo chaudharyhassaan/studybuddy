@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api, getErrorMessage } from '../lib/api';
 import ProgressBar from '../components/ProgressBar';
 import { primaryButtonClass } from '../components/PrimaryButton';
+import { usePageTitle } from '../lib/usePageTitle';
 import {
   currentWeekTasks,
   examLine,
@@ -79,6 +80,8 @@ export default function Dashboard() {
   const [error, setError] = useState('');
   const [actionError, setActionError] = useState('');
   const [pendingTaskId, setPendingTaskId] = useState(null);
+
+  usePageTitle('Your study');
 
   const loadDashboard = useCallback(async () => {
     try {

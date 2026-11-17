@@ -10,6 +10,7 @@ import {
 import QuizPlayer from '../components/QuizPlayer';
 import FlashcardViewer from '../components/FlashcardViewer';
 import { exampleFlashcards, examplePlan, exampleQuiz } from '../lib/examplePlan';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const quotedLinkClass =
   'text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink';
@@ -27,6 +28,8 @@ function StepCopy({ number, title, children }) {
 export default function Landing() {
   const { user } = useAuth();
   const planHref = user ? '/plans/new' : '/register';
+
+  usePageTitle();
 
   return (
     <div>

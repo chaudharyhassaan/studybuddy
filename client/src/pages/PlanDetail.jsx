@@ -18,6 +18,7 @@ import PrimaryButton, {
 } from '../components/PrimaryButton';
 import ProgressBar from '../components/ProgressBar';
 import StudyTools from '../components/StudyTools';
+import { usePageTitle } from '../lib/usePageTitle';
 import {
   chartDataFor,
   countdownLabel,
@@ -85,6 +86,8 @@ export default function PlanDetail() {
   const [deleteError, setDeleteError] = useState('');
   const dialogRef = useRef(null);
   const deleteTriggerRef = useRef(null);
+
+  usePageTitle(loading ? 'Plan' : notFound ? 'Plan not found' : plan?.subject ?? 'Plan');
 
   const loadPlan = useCallback(() => {
     return api
