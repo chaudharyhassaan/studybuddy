@@ -259,8 +259,10 @@ export default function CreatePlan() {
                   }}
                   onKeyDown={handleTopicKeyDown}
                   placeholder="Cell structure"
-                  aria-invalid={topicError ? 'true' : undefined}
-                  aria-describedby={topicError ? 'topic-error' : 'topic-helper'}
+                  aria-invalid={topicError || activeErrors.topics ? 'true' : undefined}
+                  aria-describedby={
+                    topicError ? 'topic-error' : activeErrors.topics ? 'topics-error' : 'topic-helper'
+                  }
                   className={`${topicInputClass} ${
                     topicError ? 'border-error' : 'border-border-strong'
                   }`}
@@ -303,7 +305,9 @@ export default function CreatePlan() {
                 </ul>
               ) : null}
               {activeErrors.topics ? (
-                <p className="mt-2 text-xs text-error">{activeErrors.topics}</p>
+                <p id="topics-error" className="mt-2 text-xs text-error">
+                  {activeErrors.topics}
+                </p>
               ) : null}
             </div>
 

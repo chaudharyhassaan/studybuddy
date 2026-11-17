@@ -15,8 +15,9 @@ export default function TextField({
   required = false,
 }) {
   const describedBy =
-    [error ? `${id}-error` : null, helper ? `${id}-helper` : null].filter(Boolean).join(' ') ||
-    undefined;
+    [error ? `${id}-error` : null, helper && !error ? `${id}-helper` : null]
+      .filter(Boolean)
+      .join(' ') || undefined;
 
   return (
     <div>
