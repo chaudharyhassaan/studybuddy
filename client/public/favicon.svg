@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="StudyBuddy">
-  <rect width="32" height="32" rx="3" fill="#8f4529" />
-  <text
-    x="16"
-    y="22.5"
-    text-anchor="middle"
-    font-family="Fraunces, Georgia, 'Times New Roman', serif"
-    font-size="20"
-    font-weight="600"
-    fill="#fbf8f0"
-  >S</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="5" fill="#f4f0e6"/>
+  <rect x="10.5" y="4.5" width="16" height="20" rx="2.5" fill="none" stroke="#8f4529" stroke-width="1.8"/>
+  <rect x="5.5" y="7.5" width="16" height="20" rx="2.5" fill="#8f4529"/>
+  <path d="M10 13.5h7M10 17.5h7M10 21.5h4.5" stroke="#fbf8f0" stroke-width="1.8" stroke-linecap="round"/>
 </svg>
