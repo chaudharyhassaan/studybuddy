@@ -5,7 +5,8 @@ import { getErrorMessage } from '../lib/api';
 import { validateEmail, validateLogin, validateLoginPassword } from '../lib/validation';
 import { usePageTitle } from '../lib/usePageTitle';
 import FormErrorSummary from '../components/FormErrorSummary';
-import PrimaryButton from '../components/PrimaryButton';
+import LogoMark from '../components/LogoMark';
+import PrimaryButton, { accentLinkClass } from '../components/PrimaryButton';
 import TextField from '../components/TextField';
 
 const fieldValidators = {
@@ -75,50 +76,66 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full max-w-auth rounded-md border border-border bg-surface p-6 md:p-8">
-      <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">Log in.</h1>
-      <form noValidate onSubmit={handleSubmit} aria-busy={submitting} className="mt-6 space-y-5">
-        <FormErrorSummary
-          ref={summaryRef}
-          message={formError || (submitCount > 0 && Object.values(errors).some(Boolean) ? 'Check the fields below.' : '')}
-          errors={submitCount > 0 ? errors : {}}
-        />
-        <TextField
-          id="email"
-          label="Email"
-          type="email"
-          value={values.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={errors.email}
-          autoComplete="email"
-          required
-        />
-        <TextField
-          id="password"
-          label="Password"
-          type="password"
-          value={values.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={errors.password}
-          autoComplete="current-password"
-          required
-        />
-        <PrimaryButton type="submit" className="w-full" disabled={submitting}>
-          {submitting ? 'Logging in' : 'Log in'}
-        </PrimaryButton>
-      </form>
-      <p className="mt-6 text-sm text-ink-muted">
-        New here?{' '}
-        <Link
-          to="/register"
-          className="text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover"
-        >
-          Create an account
-        </Link>
-        .
-      </p>
+    <div className="w-full max-w-auth overflow-hidden rounded-lg border border-border bg-surface">
+      <div className="h-0.5 bg-accent" />
+      <div className="p-6 md:p-8">
+        <div className="flex items-center gap-3">
+          <LogoMark className="h-8 w-8 text-accent" />
+          <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            Welcome back
+          </p>
+        </div>
+        <h1 className="mt-4 font-display text-title font-semibold text-ink">Log in.</h1>
+        <p className="mt-2 text-sm text-ink-muted">
+          Open your schedule and pick up where you left off.
+        </p>
+
+        <form noValidate onSubmit={handleSubmit} aria-busy={submitting} className="mt-7 space-y-5">
+          <FormErrorSummary
+            ref={summaryRef}
+            message={
+              formError ||
+              (submitCount > 0 && Object.values(errors).some(Boolean)
+                ? 'Check the fields below.'
+                : '')
+            }
+            errors={submitCount > 0 ? errors : {}}
+          />
+          <TextField
+            id="email"
+            label="Email"
+            type="email"
+            value={values.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={errors.email}
+            autoComplete="email"
+            required
+          />
+          <TextField
+            id="password"
+            label="Password"
+            type="password"
+            value={values.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={errors.password}
+            autoComplete="current-password"
+            required
+          />
+          <PrimaryButton type="submit" className="w-full" disabled={submitting}>
+            {submitting ? 'Logging in' : 'Log in'}
+          </PrimaryButton>
+        </form>
+
+        <p className="mt-7 border-t border-border pt-5 text-sm text-ink-muted">
+          New here?{' '}
+          <Link to="/register" className={accentLinkClass}>
+            Create an account
+          </Link>
+          .
+        </p>
+      </div>
     </div>
   );
 }

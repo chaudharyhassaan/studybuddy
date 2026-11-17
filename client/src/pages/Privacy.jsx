@@ -1,20 +1,26 @@
 import { Link } from 'react-router-dom';
 import { usePageTitle } from '../lib/usePageTitle';
+import { accentLinkClass as linkClass } from '../components/PrimaryButton';
 
-const linkClass =
-  'text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover';
-
-const sectionClass = 'border-t border-border pt-6';
+const sectionClass = 'border-t border-border pt-8';
 
 export default function Privacy() {
   usePageTitle('Privacy Policy');
 
   return (
-    <article className="mx-auto max-w-reading">
-      <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">Privacy Policy</h1>
-      <p className="mt-2 text-xs text-ink-muted">Last updated: 16 November 2026</p>
+    <article aria-labelledby="privacy-heading" className="mx-auto max-w-reading">
+      <header className="border-b border-border pb-8">
+        <p className="eyebrow">Legal</p>
+        <h1
+          id="privacy-heading"
+          className="mt-3 font-display text-title font-semibold text-ink"
+        >
+          Privacy Policy
+        </h1>
+        <p className="mt-2 text-xs text-ink-muted">Last updated: 16 November 2026</p>
+      </header>
 
-      <div className="mt-8 space-y-8">
+      <div className="mt-10 space-y-10">
         <section>
           <h2 className="font-display text-h3 font-semibold text-ink">Data we collect</h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
@@ -71,7 +77,7 @@ export default function Privacy() {
 
         <section className={sectionClass}>
           <h2 className="font-display text-h3 font-semibold text-ink">Your choices</h2>
-          <div className="mt-4 rounded-md border border-border bg-surface p-5">
+          <div className="mt-4 rounded-md border border-border border-l-2 border-l-accent bg-accent-wash p-5">
             <p className="text-base leading-relaxed text-ink">
               You can delete a plan from its page, or delete your account in Settings. Logging out
               removes the sign-in token from this browser. Questions about your data go to the

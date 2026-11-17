@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import { primaryButtonClass } from '../components/PrimaryButton';
+import { primaryButtonClass, quietButtonClass } from '../components/PrimaryButton';
 import { usePageTitle } from '../lib/usePageTitle';
 
 export default function NotFound() {
@@ -10,15 +10,16 @@ export default function NotFound() {
   usePageTitle('Page not found');
 
   return (
-    <div className="mx-auto flex max-w-[480px] flex-col items-center px-4 py-24 text-center">
-      <p className="font-display text-display font-semibold text-ink-muted">404</p>
-      <h1 className="mt-4 font-display text-h1 font-semibold tracking-tight text-ink">
-        Page not found.
+    <div className="mx-auto max-w-[560px] px-4 py-20 md:px-6 md:py-28">
+      <p className="eyebrow">Page not found</p>
+      <p className="mt-6 font-display text-display italic text-ink-muted">404</p>
+      <h1 className="mt-4 font-display text-title font-semibold text-ink">
+        This page does not exist.
       </h1>
-      <p className="mt-3 text-base text-ink-muted">
-        This page does not exist. Check the address or go back to your dashboard.
+      <p className="mt-4 max-w-form text-base text-ink-muted">
+        Check the address, or go back to the part of StudyBuddy you were using.
       </p>
-      <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+      <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
         {loading ? null : user ? (
           <Link to="/dashboard" className={primaryButtonClass}>
             Go to dashboard
@@ -28,11 +29,7 @@ export default function NotFound() {
             Go to home
           </Link>
         )}
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="h-11 px-2 text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
+        <button type="button" onClick={() => navigate(-1)} className={quietButtonClass}>
           Back
         </button>
       </div>

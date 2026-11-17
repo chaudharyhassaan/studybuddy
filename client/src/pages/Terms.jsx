@@ -1,22 +1,26 @@
 import { Link } from 'react-router-dom';
 import { usePageTitle } from '../lib/usePageTitle';
+import { accentLinkClass as linkClass } from '../components/PrimaryButton';
 
-const linkClass =
-  'text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover';
-
-const sectionClass = 'border-t border-border pt-6';
+const sectionClass = 'border-t border-border pt-8';
 
 export default function Terms() {
   usePageTitle('Terms of Service');
 
   return (
-    <article className="mx-auto max-w-reading">
-      <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">
-        Terms of Service
-      </h1>
-      <p className="mt-2 text-xs text-ink-muted">Last updated: 16 November 2026</p>
+    <article aria-labelledby="terms-heading" className="mx-auto max-w-reading">
+      <header className="border-b border-border pb-8">
+        <p className="eyebrow">Legal</p>
+        <h1
+          id="terms-heading"
+          className="mt-3 font-display text-title font-semibold text-ink"
+        >
+          Terms of Service
+        </h1>
+        <p className="mt-2 text-xs text-ink-muted">Last updated: 16 November 2026</p>
+      </header>
 
-      <div className="mt-8 space-y-8">
+      <div className="mt-10 space-y-10">
         <section className={`${sectionClass} first:border-t-0 first:pt-0`}>
           <h2 className="font-display text-h3 font-semibold text-ink">What this service is</h2>
           <p className="mt-2 text-base leading-relaxed text-ink">

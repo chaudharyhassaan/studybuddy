@@ -5,7 +5,8 @@ import { getErrorMessage } from '../lib/api';
 import { validateEmail, validateName, validateNewPassword, validateRegister } from '../lib/validation';
 import { usePageTitle } from '../lib/usePageTitle';
 import FormErrorSummary from '../components/FormErrorSummary';
-import PrimaryButton from '../components/PrimaryButton';
+import LogoMark from '../components/LogoMark';
+import PrimaryButton, { accentLinkClass } from '../components/PrimaryButton';
 import TextField from '../components/TextField';
 
 const fieldValidators = {
@@ -86,17 +87,25 @@ export default function Register() {
   }
 
   return (
-    <div className="grid w-full max-w-auth overflow-hidden rounded-md border border-border lg:max-w-[780px] lg:grid-cols-[420px_360px]">
-      <div className="bg-surface p-6 md:p-8">
-        <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">
+    <div className="grid w-full max-w-auth overflow-hidden rounded-lg border border-border bg-surface lg:max-w-[820px] lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="h-0.5 bg-accent lg:col-span-2" />
+      <div className="p-6 md:p-8">
+        <p className="eyebrow">New account</p>
+        <h1 className="mt-4 font-display text-title font-semibold text-ink">
           Create your account.
         </h1>
-        <form noValidate onSubmit={handleSubmit} aria-busy={submitting} className="mt-6 space-y-5">
+        <p className="mt-2 text-sm text-ink-muted">
+          Start with one subject and a date. The plan is built from there.
+        </p>
+
+        <form noValidate onSubmit={handleSubmit} aria-busy={submitting} className="mt-7 space-y-5">
           <FormErrorSummary
             ref={summaryRef}
             message={
               formError ||
-              (submitCount > 0 && Object.values(errors).some(Boolean) ? 'Check the fields below.' : '')
+              (submitCount > 0 && Object.values(errors).some(Boolean)
+                ? 'Check the fields below.'
+                : '')
             }
             errors={submitCount > 0 ? errors : {}}
           />
@@ -137,43 +146,43 @@ export default function Register() {
             {submitting ? 'Creating account' : 'Create account'}
           </PrimaryButton>
         </form>
-        <p className="mt-6 text-sm text-ink-muted">
+
+        <p className="mt-7 border-t border-border pt-5 text-sm text-ink-muted">
           Already have an account?{' '}
-          <Link
-            to="/login"
-            className="text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover"
-          >
+          <Link to="/login" className={accentLinkClass}>
             Log in
           </Link>
           .
         </p>
         <p className="mt-3 text-xs text-ink-muted">
           By creating an account you agree to the{' '}
-          <Link
-            to="/terms"
-            className="text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover"
-          >
+          <Link to="/terms" className={accentLinkClass}>
             Terms
           </Link>{' '}
           and{' '}
-          <Link
-            to="/privacy"
-            className="text-accent underline underline-offset-2 transition-colors duration-150 hover:text-accent-hover"
-          >
+          <Link to="/privacy" className={accentLinkClass}>
             Privacy Policy
           </Link>
           .
         </p>
       </div>
-      <aside className="hidden border-l border-border bg-sunken p-8 lg:block">
-        <h2 className="font-display text-h2 font-semibold tracking-tight text-ink">What you get.</h2>
-        <ul className="mt-4">
-          {noteItems.map((item) => (
-            <li key={item} className="border-t border-border py-4 text-sm text-ink-muted first:border-t-0 first:pt-0">
-              {item}
+
+      <aside className="hidden border-l border-border bg-sunken p-8 lg:flex lg:flex-col">
+        <LogoMark className="h-9 w-9 text-accent" />
+        <h2 className="mt-6 font-display text-h2 font-semibold text-ink">What you get.</h2>
+        <ol className="mt-5 divide-y divide-border border-t border-border">
+          {noteItems.map((item, index) => (
+            <li key={item} className="flex gap-4 py-4">
+              <span className="font-display text-sm font-semibold tabular-nums text-accent">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <p className="text-sm text-ink-muted">{item}</p>
             </li>
           ))}
-        </ul>
+        </ol>
+        <p className="mt-auto border-t border-border pt-5 text-xs text-ink-muted">
+          You can delete your account at any time in Settings.
+        </p>
       </aside>
     </div>
   );

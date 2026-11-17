@@ -45,9 +45,11 @@ export function DashboardPreview({ plan }) {
   const progress = progressFor(plan.tasks);
 
   return (
-    <div className="rounded-lg border border-border bg-surface">
-      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border px-4 py-3 md:px-5">
-        <p className="text-2xs font-semibold uppercase text-ink-muted">Example plan</p>
+    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border bg-sunken px-4 py-3 md:px-5">
+        <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          Today
+        </p>
         <p className="text-xs text-ink-muted">{examLine(plan.examDate)}</p>
       </div>
 
@@ -64,12 +66,11 @@ export function DashboardPreview({ plan }) {
           className="mt-2"
         />
 
-        <h3 className="mt-6 text-2xs font-semibold uppercase text-ink-muted">Today</h3>
-        <div className="mt-2 overflow-hidden rounded-md border border-border">
+        <div className="mt-6 overflow-hidden rounded-md border border-border">
           <TaskRows subject={plan.subject} tasks={todayTasks} />
         </div>
 
-        <p className="mt-3 border-t border-border pt-3 text-2xs text-ink-muted">
+        <p className="mt-4 border-t border-border pt-3 text-xs text-ink-muted">
           Sample plan. Your schedule is built from your own topics and dates.
         </p>
       </div>
@@ -84,10 +85,12 @@ export function SchedulePreview({ plan, maxDays = 1 }) {
     .slice(0, maxDays);
 
   return (
-    <div className="rounded-lg border border-border bg-surface">
-      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border px-4 py-3">
+    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+      <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border px-4 py-3 md:px-5">
         <div>
-          <p className="text-2xs font-semibold uppercase text-ink-muted">Schedule</p>
+          <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            Schedule
+          </p>
           <p className="mt-1 font-display text-h3 font-semibold text-ink">{plan.subject}</p>
         </div>
         <p className="text-xs text-ink-muted">{examLine(plan.examDate)}</p>
@@ -95,7 +98,7 @@ export function SchedulePreview({ plan, maxDays = 1 }) {
 
       {groups.map((group) => (
         <section key={group.date} className="border-t border-border first:border-t-0">
-          <div className="flex flex-wrap items-baseline justify-between gap-2 bg-sunken px-4 py-2">
+          <div className="flex flex-wrap items-baseline justify-between gap-2 bg-sunken px-4 py-2.5">
             <p className="text-xs font-semibold text-ink">
               {formatDate(group.date, { weekday: true })}
             </p>
@@ -126,7 +129,10 @@ export function SetupPreview({ plan }) {
           />
         </div>
         <div>
-          <label htmlFor="example-exam-date" className="mb-2 block text-xs font-semibold text-ink">
+          <label
+            htmlFor="example-exam-date"
+            className="mb-2 block text-xs font-semibold text-ink"
+          >
             Exam date
           </label>
           <input
@@ -140,7 +146,7 @@ export function SetupPreview({ plan }) {
         </div>
       </div>
 
-      <div className="mt-4 border-t border-border pt-4">
+      <div className="mt-5 border-t border-border pt-4">
         <p className="mb-2 text-xs font-semibold text-ink">Topics</p>
         <ul className="flex flex-wrap gap-2">
           {['Cell structure', 'Enzymes', 'Respiration'].map((topic) => (
@@ -154,7 +160,7 @@ export function SetupPreview({ plan }) {
         </ul>
       </div>
 
-      <div className="mt-4 border-t border-border pt-4 sm:max-w-[50%]">
+      <div className="mt-5 border-t border-border pt-4 sm:max-w-[50%]">
         <label htmlFor="example-hours" className="mb-2 block text-xs font-semibold text-ink">
           Hours per day
         </label>
@@ -177,28 +183,38 @@ export function ProgressPreview({ plan }) {
 
   return (
     <div className="rounded-lg border border-border bg-surface p-4 md:p-5">
-      <p className="text-2xs font-semibold uppercase text-ink-muted">Plan progress</p>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          Plan progress
+        </p>
+        <p className="font-display text-h2 font-semibold tabular-nums text-ink">
+          {progress.percentage}%
+        </p>
+      </div>
       <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2 text-xs text-ink-muted">
         <span>
           {progress.completed} of {progress.total} tasks complete
         </span>
-        <span className="font-semibold text-ink">{progress.percentage}%</span>
       </div>
       <ProgressBar
         value={progress.percentage}
         label={`${plan.subject} example plan progress`}
-        className="mt-2"
+        className="mt-3"
       />
 
-      <dl className="mt-4 grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
+      <dl className="mt-5 grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
         <div>
-          <dt className="text-2xs font-semibold uppercase text-ink-muted">Today</dt>
+          <dt className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            Today
+          </dt>
           <dd className="mt-1 text-sm text-ink">
             {todayProgress.completed} of {todayProgress.total} tasks complete
           </dd>
         </div>
         <div>
-          <dt className="text-2xs font-semibold uppercase text-ink-muted">Streak</dt>
+          <dt className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            Streak
+          </dt>
           <dd className="mt-1 text-sm text-ink">A task was completed today.</dd>
           <dd className="mt-1 text-xs text-ink-muted">
             The streak counts days with completed work.
