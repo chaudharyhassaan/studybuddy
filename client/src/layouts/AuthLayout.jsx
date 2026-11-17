@@ -3,6 +3,7 @@ import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
 import RouteSkeleton from '../components/RouteSkeleton';
 import Wordmark from '../components/Wordmark';
+import { textLinkClass } from '../components/PrimaryButton';
 
 export default function AuthLayout() {
   const { user, loading } = useAuth();
@@ -21,12 +22,10 @@ export default function AuthLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-paper">
       <header className="border-b border-border bg-paper">
+        <div className="h-0.5 bg-accent" />
         <div className="mx-auto flex h-16 max-w-content items-center justify-between px-4 md:px-6 lg:px-10">
           <Wordmark size="sm" />
-          <Link
-            to={isLogin ? '/register' : '/login'}
-            className="text-sm text-ink-muted transition-colors duration-150 hover:text-ink"
-          >
+          <Link to={isLogin ? '/register' : '/login'} className={`${textLinkClass} text-sm`}>
             {isLogin ? 'Create an account' : 'Log in'}
           </Link>
         </div>

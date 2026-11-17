@@ -21,8 +21,16 @@ export default function TextField({
 
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-xs font-semibold text-ink">
-        {label}
+      <label
+        htmlFor={id}
+        className="mb-2 flex items-baseline justify-between gap-3 text-xs font-semibold text-ink"
+      >
+        <span>{label}</span>
+        {required ? (
+          <span className="text-label font-semibold uppercase tracking-[0.12em] text-ink-muted">
+            Required
+          </span>
+        ) : null}
       </label>
       <input
         id={id}
@@ -39,7 +47,7 @@ export default function TextField({
         required={required}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={describedBy}
-        className={`block h-11 w-full rounded-sm border bg-surface px-3 text-base text-ink placeholder:text-ink-muted transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:h-10 ${
+        className={`block h-11 w-full rounded-sm border bg-surface px-3 text-base text-ink placeholder:text-ink-muted transition-colors duration-150 hover:border-ink-muted focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:border-border disabled:bg-sunken disabled:text-ink-muted md:h-10 ${
           error ? 'border-error' : 'border-border-strong'
         }`}
       />
@@ -49,7 +57,7 @@ export default function TextField({
         </p>
       ) : null}
       {helper && !error ? (
-        <p id={`${id}-helper`} className="mt-2 text-2xs text-ink-muted">
+        <p id={`${id}-helper`} className="mt-2 text-xs text-ink-muted">
           {helper}
         </p>
       ) : null}
