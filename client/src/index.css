@@ -7,10 +7,11 @@
   --radius-*: initial;
   --container-*: initial;
 
-  /* Color */
+  /* Paper, ink and clay */
   --color-paper: #f4f0e6;
   --color-surface: #faf7ef;
   --color-sunken: #eae4d6;
+  --color-sunken-deep: #e0d7c4;
   --color-border: #d7cfbe;
   --color-border-strong: #8b8371;
   --color-ink: #23261f;
@@ -19,6 +20,7 @@
   --color-accent-hover: #7a3920;
   --color-accent-pressed: #6b3119;
   --color-accent-soft: #f1e3d5;
+  --color-accent-wash: #f7ede3;
   --color-on-accent: #fbf8f0;
   --color-success: #2f6b45;
   --color-warning: #8a5b12;
@@ -29,42 +31,50 @@
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: "Source Sans 3", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
 
-  --text-display: 3rem;
-  --text-display--line-height: 1.06;
-  --text-display--letter-spacing: -0.02em;
+  --text-display: clamp(2.75rem, 5.6vw, 4.25rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.028em;
 
-  --text-title: 2.25rem;
-  --text-title--line-height: 1.12;
-  --text-title--letter-spacing: -0.015em;
+  --text-title: clamp(2rem, 3.6vw, 2.75rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.022em;
 
-  --text-h1: 2rem;
-  --text-h1--line-height: 1.2;
-  --text-h1--letter-spacing: -0.01em;
+  --text-h1: clamp(1.75rem, 2.8vw, 2.15rem);
+  --text-h1--line-height: 1.16;
+  --text-h1--letter-spacing: -0.018em;
 
   --text-h2: 1.5rem;
-  --text-h2--line-height: 1.3;
-  --text-h2--letter-spacing: -0.005em;
+  --text-h2--line-height: 1.28;
+  --text-h2--letter-spacing: -0.01em;
 
   --text-h3: 1.25rem;
   --text-h3--line-height: 1.35;
-  --text-h3--letter-spacing: 0em;
+  --text-h3--letter-spacing: -0.004em;
+
+  --text-stat: clamp(2rem, 3.4vw, 2.75rem);
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.03em;
 
   --text-lg: 1.125rem;
   --text-lg--line-height: 1.6;
 
   --text-base: 1rem;
-  --text-base--line-height: 1.6;
+  --text-base--line-height: 1.65;
 
   --text-sm: 0.9375rem;
   --text-sm--line-height: 1.55;
 
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.45;
-  --text-xs--letter-spacing: 0.01em;
+  --text-xs--letter-spacing: 0.005em;
 
   --text-2xs: 0.75rem;
   --text-2xs--line-height: 1.4;
-  --text-2xs--letter-spacing: 0.08em;
+  --text-2xs--letter-spacing: 0.06em;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.14em;
 
   /* Spacing: 4px base */
   --spacing: 0.25rem;
@@ -74,29 +84,76 @@
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
-  --radius-full: 9999px;
 
   /* Widths */
   --container-content: 1120px;
-  --container-reading: 720px;
+  --container-reading: 700px;
   --container-form: 640px;
-  --container-auth: 400px;
+  --container-auth: 420px;
 
   /* Remove shadow utilities: depth comes from borders and tones */
   --shadow-*: initial;
   --drop-shadow-*: initial;
 
-  /* Only the tonal skeleton pulse remains */
-  --animate-*: initial;
-  --animate-pulse: pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Motion */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --default-transition-duration: 150ms;
-  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  /* Only the tonal skeleton pulse remains as a built-in animation */
+  --animate-*: initial;
+  --animate-pulse: pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  --default-transition-duration: 160ms;
+  --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @layer base {
@@ -109,6 +166,20 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
@@ -119,5 +190,99 @@
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+
+  dialog::backdrop {
+    background-color: rgb(35 38 31 / 0.4);
+  }
+}
+
+@layer components {
+  /* Small uppercase section marker with a clay rule */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-ink-muted);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: block;
+    width: 1.5rem;
+    height: 1px;
+    background-color: var(--color-accent);
+  }
+
+  /* Page and list entrances. Transform and opacity only. */
+  .page-enter {
+    animation: page-enter 320ms var(--ease-out) both;
+  }
+
+  .enter-up {
+    animation: item-enter 300ms var(--ease-out) both;
+  }
+
+  .enter-panel {
+    animation: panel-enter 220ms var(--ease-out) both;
+  }
+
+  .stagger-list > * {
+    animation: item-enter 300ms var(--ease-out) both;
+  }
+
+  .stagger-list > :nth-child(2) { animation-delay: 30ms; }
+  .stagger-list > :nth-child(3) { animation-delay: 60ms; }
+  .stagger-list > :nth-child(4) { animation-delay: 90ms; }
+  .stagger-list > :nth-child(5) { animation-delay: 120ms; }
+  .stagger-list > :nth-child(6) { animation-delay: 150ms; }
+  .stagger-list > :nth-child(7) { animation-delay: 180ms; }
+  .stagger-list > :nth-child(8) { animation-delay: 210ms; }
+  .stagger-list > :nth-child(n + 9) { animation-delay: 240ms; }
+
+  /* Press feedback. Hover stays a colour change only. */
+  .pressable {
+    transition-property: background-color, border-color, color, opacity;
+    transition-duration: 160ms;
+    transition-timing-function: var(--ease-out);
+  }
+
+  dialog[open] {
+    animation: dialog-enter 200ms var(--ease-out) both;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pressable:active:not(:disabled) {
+    transform: scale(0.985);
+    transition: transform 110ms var(--ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .page-enter,
+  .enter-up,
+  .enter-panel,
+  .stagger-list > *,
+  dialog[open] {
+    animation: none;
+  }
+
+  .pressable:active:not(:disabled) {
+    transform: none;
   }
 }
