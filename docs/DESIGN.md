@@ -47,6 +47,7 @@ All values are exact. No pure white and no pure black appear anywhere.
 | `success` | `#2F6B45` | Completed, correct, on track |
 | `warning` | `#8A5B12` | Due soon, attention |
 | `error` | `#A63A2D` | Incorrect, destructive, validation |
+| `error-hover` | `#8A2F24` | Hover for solid destructive buttons |
 
 Usage balance: roughly 70 percent paper, 20 percent surface and sunken, 7 percent ink, 3 percent accent. Status colors appear only when the state applies.
 
@@ -82,6 +83,7 @@ Measured with the standard relative luminance formula. Normal text needs 4.5:1, 
 | `error` on `paper` | 5.65:1 | 4.5:1 | Pass |
 | `error` on `surface` | 6.01:1 | 4.5:1 | Pass |
 | `on-accent` on `error` | 6.06:1 | 4.5:1 | Pass |
+| `on-accent` on `error-hover` | 7.87:1 | 4.5:1 | Pass |
 | `border-strong` on `paper` | 3.31:1 | 3:1 | Pass, non-text |
 | `border-strong` on `surface` | 3.51:1 | 3:1 | Pass, non-text |
 | `accent` on `paper` | 6.05:1 | 3:1 | Pass, focus indicator |
