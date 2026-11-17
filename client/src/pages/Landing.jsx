@@ -49,7 +49,7 @@ export default function Landing() {
     <div>
       <section aria-labelledby="hero-heading" className="border-b border-border">
         <div className="mx-auto grid max-w-content gap-12 px-4 py-14 md:px-6 md:py-20 lg:grid-cols-12 lg:items-start lg:gap-10 lg:px-10 lg:py-24">
-          <div className="lg:col-span-6 lg:pr-4">
+          <div className="min-w-0 lg:col-span-6 lg:pr-4">
             <p className="eyebrow">Study planner</p>
             <h1
               id="hero-heading"
@@ -93,8 +93,8 @@ export default function Landing() {
             </dl>
           </div>
 
-          <div className="lg:col-span-6">
-            <div className="rounded-lg border border-border bg-sunken p-2.5 md:p-3">
+          <div className="min-w-0 lg:col-span-6">
+            <div className="min-w-0 rounded-lg border border-border bg-sunken p-2.5 md:p-3">
               <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-2 px-1.5">
                 <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
                   Example plan
@@ -123,7 +123,7 @@ export default function Landing() {
                   That is the whole setup.
                 </StepCopy>
               </div>
-              <div className="lg:col-span-7">
+              <div className="min-w-0 lg:col-span-7">
                 <SetupPreview plan={examplePlan} />
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function Landing() {
                   day. It can also make quizzes and flashcards for each topic.
                 </StepCopy>
               </div>
-              <div className="lg:order-1 lg:col-span-7">
+              <div className="min-w-0 lg:order-1 lg:col-span-7">
                 <SchedulePreview plan={examplePlan} maxDays={1} />
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function Landing() {
                   you finish.
                 </StepCopy>
               </div>
-              <div className="lg:col-span-7">
+              <div className="min-w-0 lg:col-span-7">
                 <ProgressPreview plan={examplePlan} />
               </div>
             </div>
@@ -175,7 +175,7 @@ export default function Landing() {
                 Open the plan from your dashboard and check off work as you finish it.
               </p>
             </div>
-            <div className="lg:col-span-7">
+            <div className="min-w-0 lg:col-span-7">
               <SchedulePreview plan={examplePlan} maxDays={2} />
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="space-y-6 lg:order-1 lg:col-span-7">
+            <div className="min-w-0 space-y-6 lg:order-1 lg:col-span-7">
               <div className="rounded-lg border border-border bg-paper p-4 md:p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-3">
                   <h4 className="font-display text-h3 font-semibold text-ink">Quiz</h4>

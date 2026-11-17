@@ -45,7 +45,7 @@ export function DashboardPreview({ plan }) {
   const progress = progressFor(plan.tasks);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-border bg-surface">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border bg-sunken px-4 py-3 md:px-5">
         <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Today
@@ -85,7 +85,7 @@ export function SchedulePreview({ plan, maxDays = 1 }) {
     .slice(0, maxDays);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-border bg-surface">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border px-4 py-3 md:px-5">
         <div>
           <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
@@ -113,7 +113,7 @@ export function SchedulePreview({ plan, maxDays = 1 }) {
 
 export function SetupPreview({ plan }) {
   return (
-    <div className="rounded-lg border border-border bg-surface p-4 md:p-5">
+    <div className="min-w-0 rounded-lg border border-border bg-surface p-4 md:p-5">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="example-subject" className="mb-2 block text-xs font-semibold text-ink">
@@ -182,7 +182,7 @@ export function ProgressPreview({ plan }) {
   const todayProgress = progressFor(plan.tasks.filter((task) => task.date === todayIso()));
 
   return (
-    <div className="rounded-lg border border-border bg-surface p-4 md:p-5">
+    <div className="min-w-0 rounded-lg border border-border bg-surface p-4 md:p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Plan progress
