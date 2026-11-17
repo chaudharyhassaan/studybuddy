@@ -15,6 +15,7 @@ import PrimaryButton, {
   destructiveButtonClass,
   primaryButtonClass,
   secondaryButtonClass,
+  textLinkClass,
 } from '../components/PrimaryButton';
 import ProgressBar from '../components/ProgressBar';
 import StudyTools from '../components/StudyTools';
@@ -54,16 +55,29 @@ function ChartTooltip({ active, payload }) {
 function PlanSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <div aria-hidden="true" className="h-4 w-32 rounded-sm bg-sunken motion-safe:animate-pulse" />
-      <div aria-hidden="true" className="mt-5 h-8 w-64 max-w-full rounded-sm bg-sunken motion-safe:animate-pulse" />
-      <div aria-hidden="true" className="mt-2 h-4 w-80 max-w-full rounded-sm bg-sunken motion-safe:animate-pulse" />
-      <div className="mt-6 grid gap-6 xl:grid-cols-12">
+      <div aria-hidden="true" className="h-3 w-28 rounded-sm bg-sunken motion-safe:animate-pulse" />
+      <div
+        aria-hidden="true"
+        className="mt-4 h-3 w-16 rounded-sm bg-sunken motion-safe:animate-pulse"
+      />
+      <div
+        aria-hidden="true"
+        className="mt-3 h-8 w-64 max-w-full rounded-sm bg-sunken motion-safe:animate-pulse"
+      />
+      <div
+        aria-hidden="true"
+        className="mt-2 h-4 w-80 max-w-full rounded-sm bg-sunken motion-safe:animate-pulse"
+      />
+      <div className="mt-8 grid gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
-          <div className="h-40 rounded-md border border-border bg-surface" aria-hidden="true" />
-          <div className="h-64 rounded-md border border-border bg-surface" aria-hidden="true" />
-          <div className="h-56 rounded-md border border-border bg-surface" aria-hidden="true" />
+          <div className="h-40 rounded-lg border border-border bg-surface" aria-hidden="true" />
+          <div className="h-64 rounded-lg border border-border bg-surface" aria-hidden="true" />
+          <div className="h-56 rounded-lg border border-border bg-surface" aria-hidden="true" />
         </div>
-        <div className="h-32 rounded-md border border-border bg-surface xl:col-span-4" aria-hidden="true" />
+        <div
+          className="h-32 rounded-lg border border-border bg-surface xl:col-span-4"
+          aria-hidden="true"
+        />
       </div>
     </div>
   );
@@ -189,21 +203,17 @@ export default function PlanDetail() {
   if (notFound) {
     return (
       <div>
-        <Link
-          to="/dashboard"
-          className="text-sm text-ink-muted transition-colors duration-150 hover:text-ink"
-        >
+        <Link to="/dashboard" className={`${textLinkClass} text-sm`}>
           Back to dashboard
         </Link>
-        <h1 className="mt-4 font-display text-h1 font-semibold tracking-tight text-ink">
-          Plan not found.
-        </h1>
-        <p className="mt-2 text-sm text-ink-muted">
-          This plan does not exist or was deleted.
-        </p>
-        <Link to="/dashboard" className={`${primaryButtonClass} mt-6`}>
-          Go to dashboard
-        </Link>
+        <div className="mt-6 max-w-form border-l-2 border-l-accent pl-5">
+          <p className="eyebrow">Plan</p>
+          <h1 className="mt-3 font-display text-h1 font-semibold text-ink">Plan not found.</h1>
+          <p className="mt-2 text-sm text-ink-muted">This plan does not exist or was deleted.</p>
+          <Link to="/dashboard" className={`${primaryButtonClass} mt-6`}>
+            Go to dashboard
+          </Link>
+        </div>
       </div>
     );
   }
@@ -211,21 +221,19 @@ export default function PlanDetail() {
   if (!plan) {
     return (
       <div>
-        <Link
-          to="/dashboard"
-          className="text-sm text-ink-muted transition-colors duration-150 hover:text-ink"
-        >
+        <Link to="/dashboard" className={`${textLinkClass} text-sm`}>
           Back to dashboard
         </Link>
         <div
           role="alert"
-          className="mt-6 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
+          className="mt-6 rounded-md border border-border border-l-2 border-l-error bg-sunken px-5 py-4 text-sm text-error"
         >
-          <p>{error}</p>
+          <p className="font-semibold">Could not load this plan.</p>
+          <p className="mt-1">{error}</p>
           <button
             type="button"
             onClick={handleRetry}
-            className="mt-2 text-sm font-semibold underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="mt-2 text-sm font-semibold underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Try again
           </button>
@@ -246,31 +254,40 @@ export default function PlanDetail() {
 
   return (
     <div>
-      <Link
-        to="/dashboard"
-        className="text-sm text-ink-muted transition-colors duration-150 hover:text-ink"
-      >
+      <Link to="/dashboard" className={`${textLinkClass} text-sm`}>
         Back to dashboard
       </Link>
 
-      <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">
-            {plan.subject}
-          </h1>
-          <p className="mt-1 text-sm text-ink-muted">{countdownLabel(plan.examDate)}, {formatDate(plan.examDate, { year: true })}</p>
+          <p className="eyebrow">Plan</p>
+          <h1 className="mt-3 font-display text-title font-semibold text-ink">{plan.subject}</h1>
+          <p className="mt-2 text-sm text-ink-muted">
+            {countdownLabel(plan.examDate)}, {formatDate(plan.examDate, { year: true })}
+          </p>
           <p className="mt-1 text-xs text-ink-muted">
             {plural(plan.topics.length, 'topic')}, {plural(plan.hoursPerDay, 'hour')} per day
           </p>
         </div>
-        <button
-          ref={deleteTriggerRef}
-          type="button"
-          onClick={openDialog}
-          className="inline-flex h-11 shrink-0 items-center px-2 text-sm text-error underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          Delete plan
-        </button>
+        <div className="flex shrink-0 flex-wrap items-center gap-3">
+          {daysRemaining !== null ? (
+            <span className="rounded-xs border border-border bg-paper px-2.5 py-1.5 text-2xs font-semibold uppercase tracking-[0.08em] text-ink-muted">
+              {daysRemaining < 0
+                ? 'Exam passed'
+                : daysRemaining === 0
+                  ? 'Exam today'
+                  : `Exam in ${plural(daysRemaining, 'day')}`}
+            </span>
+          ) : null}
+          <button
+            ref={deleteTriggerRef}
+            type="button"
+            onClick={openDialog}
+            className="inline-flex h-11 shrink-0 items-center px-1 text-sm text-error underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-error-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            Delete plan
+          </button>
+        </div>
       </div>
 
       {actionError ? (
@@ -284,29 +301,28 @@ export default function PlanDetail() {
 
       <div className="mt-6 grid gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
-          <section
-            aria-labelledby="progress-heading"
-            className="rounded-md border border-border bg-surface p-5"
-          >
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0 flex-1">
-                <h2
-                  id="progress-heading"
-                  className="font-display text-h2 font-semibold tracking-tight text-ink"
-                >
-                  Progress
-                </h2>
-                <p className="mt-2 text-sm text-ink">
-                  {progress.completed} of {progress.total} tasks complete
-                </p>
+          <section aria-labelledby="progress-heading" className="overflow-hidden rounded-lg border border-border bg-surface">
+            <div className="grid gap-6 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+              <div className="min-w-0">
+                <p className="eyebrow">Progress</p>
+                <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <p className="font-display text-stat font-semibold tabular-nums text-ink">
+                    {progress.percentage}%
+                  </p>
+                  <p className="text-sm text-ink-muted">
+                    {progress.completed} of {progress.total} tasks complete
+                  </p>
+                </div>
                 <ProgressBar
                   value={progress.percentage}
                   label={`${plan.subject} progress`}
                   className="mt-3"
                 />
-                <p className="mt-2 text-xs text-ink-muted">{progress.percentage}% complete.</p>
+                <p className="mt-2 text-xs text-ink-muted">
+                  {progress.percentage}% of the plan is complete.
+                </p>
               </div>
-              <div className="shrink-0">
+              <div className="shrink-0 md:pt-7">
                 {allComplete ? (
                   <p className="text-sm font-semibold text-success">All tasks complete.</p>
                 ) : (
@@ -316,7 +332,7 @@ export default function PlanDetail() {
                 )}
               </div>
             </div>
-            <p className="mt-4 border-t border-border pt-3 text-xs text-ink-muted">
+            <p className="border-t border-border bg-sunken px-5 py-3 text-xs text-ink-muted">
               {plural(streak, 'day')} streak.{' '}
               {studiedToday
                 ? 'Completed a task today.'
@@ -324,16 +340,23 @@ export default function PlanDetail() {
             </p>
           </section>
 
-          <section
-            aria-labelledby="chart-heading"
-            className="rounded-md border border-border bg-surface p-5"
-          >
-            <h2
-              id="chart-heading"
-              className="font-display text-h2 font-semibold tracking-tight text-ink"
-            >
-              Progress by day
-            </h2>
+          <section aria-labelledby="chart-heading" className="rounded-lg border border-border bg-surface p-5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="eyebrow">By day</p>
+                <h2
+                  id="chart-heading"
+                  className="mt-2 font-display text-h2 font-semibold text-ink"
+                >
+                  Progress by day
+                </h2>
+              </div>
+              {chartData.length > 0 ? (
+                <p className="text-xs text-ink-muted">
+                  {plural(chartData.length, 'study day')}
+                </p>
+              ) : null}
+            </div>
             <p className="mt-2 text-sm text-ink-muted">
               The share of tasks completed on each study day.
             </p>
@@ -384,14 +407,23 @@ export default function PlanDetail() {
           </section>
 
           <section aria-labelledby="schedule-heading">
-            <h2
-              id="schedule-heading"
-              className="font-display text-h2 font-semibold tracking-tight text-ink"
-            >
-              Schedule
-            </h2>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="eyebrow">Schedule</p>
+                <h2
+                  id="schedule-heading"
+                  className="mt-2 font-display text-h2 font-semibold text-ink"
+                >
+                  Day by day
+                </h2>
+              </div>
+              <p className="text-xs text-ink-muted">
+                {plural(tasks.length, 'task')} across {plural(groups.length, 'day')}
+              </p>
+            </div>
+
             {groups.length === 0 ? (
-              <div className="mt-3 rounded-md border border-border bg-sunken p-5">
+              <div className="mt-3 rounded-lg border border-border bg-sunken p-5">
                 <p className="text-sm font-semibold text-ink">No tasks in this plan yet.</p>
               </div>
             ) : (
@@ -399,9 +431,9 @@ export default function PlanDetail() {
                 {groups.map((group) => (
                   <div
                     key={group.date}
-                    className="overflow-hidden rounded-md border border-border bg-surface"
+                    className="overflow-hidden rounded-lg border border-border bg-surface"
                   >
-                    <div className="flex items-center justify-between gap-4 border-b border-border bg-sunken px-4 py-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-sunken px-4 py-3">
                       <h3 className="font-display text-h3 font-semibold text-ink">
                         {formatDate(group.date, { weekday: true })}
                       </h3>
@@ -415,7 +447,7 @@ export default function PlanDetail() {
                         <li
                           key={task.id}
                           id={`task-${task.id}`}
-                          className="flex items-start gap-3 border-t border-border px-4 py-3 first:border-t-0"
+                          className="flex items-start gap-3 border-t border-border px-4 py-3.5 transition-colors duration-150 first:border-t-0 hover:bg-sunken"
                         >
                           <input
                             id={`task-checkbox-${task.id}`}
@@ -428,7 +460,7 @@ export default function PlanDetail() {
                           <div className="min-w-0 flex-1">
                             <label
                               htmlFor={`task-checkbox-${task.id}`}
-                              className="block text-sm text-ink"
+                              className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
                             >
                               {task.description}
                             </label>
@@ -456,9 +488,11 @@ export default function PlanDetail() {
         </div>
 
         <aside className="space-y-4 xl:col-span-4">
-          <div className="rounded-md border border-border bg-sunken p-4">
-            <p className="text-2xs font-semibold uppercase text-ink-muted">Exam countdown</p>
-            <p className="mt-1 font-display text-h1 font-semibold tabular-nums text-ink">
+          <div className="rounded-lg border border-border border-l-2 border-l-accent bg-accent-wash p-5">
+            <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+              Exam countdown
+            </p>
+            <p className="mt-2 font-display text-stat font-semibold tabular-nums text-ink">
               {daysRemaining === null
                 ? 'Not set'
                 : daysRemaining < 0
@@ -467,19 +501,21 @@ export default function PlanDetail() {
                     ? 'Today'
                     : plural(daysRemaining, 'day')}
             </p>
-            <p className="mt-1 text-xs text-ink-muted">
+            <p className="mt-2 text-xs text-ink-muted">
               {plan.examDate
                 ? `Exam on ${formatDate(plan.examDate, { year: true })}`
                 : 'No exam date set'}
             </p>
           </div>
-          <div className="rounded-md border border-border bg-surface p-4">
-            <p className="text-2xs font-semibold uppercase text-ink-muted">Today</p>
+          <div className="rounded-lg border border-border bg-surface p-5">
+            <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+              Today
+            </p>
             {todayProgress.total === 0 ? (
               <p className="mt-2 text-sm text-ink-muted">No tasks due today.</p>
             ) : (
               <>
-                <p className="mt-1 font-display text-h1 font-semibold tabular-nums text-ink">
+                <p className="mt-2 font-display text-h1 font-semibold tabular-nums text-ink">
                   {todayProgress.completed} of {todayProgress.total}
                 </p>
                 <p className="mt-1 text-xs text-ink-muted">
@@ -495,11 +531,12 @@ export default function PlanDetail() {
         ref={dialogRef}
         aria-labelledby="delete-plan-title"
         aria-describedby="delete-plan-details"
-        className="m-auto max-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-[480px] overflow-y-auto rounded-md border border-border bg-surface p-6 text-ink backdrop:bg-ink/40"
+        className="m-auto max-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-[480px] overflow-y-auto rounded-lg border border-border bg-surface p-6 text-ink"
       >
+        <p className="eyebrow">Delete plan</p>
         <h2
           id="delete-plan-title"
-          className="font-display text-h2 font-semibold tracking-tight text-ink"
+          className="mt-3 font-display text-h2 font-semibold text-ink"
         >
           Delete this plan?
         </h2>

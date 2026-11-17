@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, getErrorMessage } from '../lib/api';
 import ProgressBar from '../components/ProgressBar';
-import { primaryButtonClass } from '../components/PrimaryButton';
+import { primaryButtonClass, textLinkClass } from '../components/PrimaryButton';
 import { usePageTitle } from '../lib/usePageTitle';
 import {
   currentWeekTasks,
@@ -16,14 +16,16 @@ import {
 const checkboxClass =
   'mt-1 h-[18px] w-[18px] shrink-0 cursor-pointer rounded-xs accent-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60';
 
-function SummaryStat({ label, value, context, className = '' }) {
+function SummaryStat({ label, value, context, emphasis = false, className = '' }) {
   return (
     <div
-      className={`border-t border-border p-4 first:border-t-0 sm:border-t-0 sm:border-l sm:first:border-l-0 ${className}`}
+      className={`border-t border-border p-5 first:border-t-0 sm:border-t-0 sm:border-l sm:first:border-l-0 ${
+        emphasis ? 'bg-accent-wash' : ''
+      } ${className}`}
     >
-      <p className="text-2xs font-semibold uppercase text-ink-muted">{label}</p>
-      <p className="mt-1 font-display text-h1 font-semibold tabular-nums text-ink">{value}</p>
-      <p className="mt-1 text-xs text-ink-muted">{context}</p>
+      <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">{label}</p>
+      <p className="mt-2 font-display text-stat font-semibold tabular-nums text-ink">{value}</p>
+      <p className="mt-2 text-xs text-ink-muted">{context}</p>
     </div>
   );
 }
@@ -31,19 +33,26 @@ function SummaryStat({ label, value, context, className = '' }) {
 function DashboardSkeleton() {
   return (
     <div aria-busy="true" aria-live="polite">
-      <div aria-hidden="true" className="h-8 w-56 rounded-sm bg-sunken motion-safe:animate-pulse" />
+      <div aria-hidden="true" className="h-3 w-24 rounded-sm bg-sunken motion-safe:animate-pulse" />
+      <div
+        aria-hidden="true"
+        className="mt-3 h-8 w-56 rounded-sm bg-sunken motion-safe:animate-pulse"
+      />
       <div
         aria-hidden="true"
         className="mt-2 h-3 w-44 rounded-sm bg-sunken motion-safe:animate-pulse"
       />
       <div
         aria-hidden="true"
-        className="mt-8 grid overflow-hidden rounded-md border border-border bg-surface sm:grid-cols-3"
+        className="mt-8 grid overflow-hidden rounded-lg border border-border bg-surface sm:grid-cols-3"
       >
         {[0, 1, 2].map((item) => (
-          <div key={item} className="border-t border-border p-4 first:border-t-0 sm:border-t-0 sm:border-l sm:first:border-l-0">
+          <div
+            key={item}
+            className="border-t border-border p-5 first:border-t-0 sm:border-t-0 sm:border-l sm:first:border-l-0"
+          >
             <div className="h-3 w-20 rounded-sm bg-sunken motion-safe:animate-pulse" />
-            <div className="mt-3 h-7 w-24 rounded-sm bg-sunken motion-safe:animate-pulse" />
+            <div className="mt-3 h-8 w-24 rounded-sm bg-sunken motion-safe:animate-pulse" />
             <div className="mt-2 h-3 w-32 rounded-sm bg-sunken motion-safe:animate-pulse" />
           </div>
         ))}
@@ -53,7 +62,7 @@ function DashboardSkeleton() {
           {[0, 1].map((section) => (
             <div key={section}>
               <div className="h-6 w-28 rounded-sm bg-sunken motion-safe:animate-pulse" />
-              <div className="mt-3 overflow-hidden rounded-md border border-border bg-surface">
+              <div className="mt-3 overflow-hidden rounded-lg border border-border bg-surface">
                 {[0, 1, 2].map((row) => (
                   <div key={row} className="border-t border-border px-4 py-4 first:border-t-0">
                     <div className="h-4 w-2/3 rounded-sm bg-sunken motion-safe:animate-pulse" />
@@ -65,7 +74,7 @@ function DashboardSkeleton() {
           ))}
         </div>
         <div className="xl:col-span-4">
-          <div className="h-40 rounded-md border border-border bg-surface" aria-hidden="true" />
+          <div className="h-40 rounded-lg border border-border bg-surface" aria-hidden="true" />
         </div>
       </div>
     </div>
@@ -164,9 +173,10 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-h1 font-semibold tracking-tight text-ink">Your study</h1>
+          <p className="eyebrow">Dashboard</p>
+          <h1 className="mt-3 font-display text-h1 font-semibold text-ink">Your study</h1>
           <p className="mt-1 text-xs text-ink-muted">{formatToday()}</p>
         </div>
         {plans.length > 0 ? (
@@ -179,23 +189,25 @@ export default function Dashboard() {
       {error ? (
         <div
           role="alert"
-          className="mt-8 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
+          className="mt-8 rounded-md border border-border border-l-2 border-l-error bg-sunken px-5 py-4 text-sm text-error"
         >
-          <p>{error}</p>
+          <p className="font-semibold">Could not load your dashboard.</p>
+          <p className="mt-1">{error}</p>
           <button
             type="button"
             onClick={handleRetry}
-            className="mt-2 text-sm font-semibold underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="mt-2 text-sm font-semibold underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Try again
           </button>
         </div>
       ) : plans.length === 0 ? (
-        <div className="mt-8 rounded-md border border-border bg-sunken p-6">
-          <h2 className="font-display text-h2 font-semibold tracking-tight text-ink">
-            No plans yet.
-          </h2>
-          <p className="mt-2 max-w-form text-sm text-ink-muted">
+        <div className="mt-8 rounded-lg border border-border border-l-2 border-l-accent bg-sunken p-6 md:p-8">
+          <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            No plans
+          </p>
+          <h2 className="mt-3 font-display text-title font-semibold text-ink">No plans yet.</h2>
+          <p className="mt-3 max-w-form text-base text-ink-muted">
             Create a plan for your next exam and your schedule will appear here.
           </p>
           <Link to="/plans/new" className={`${primaryButtonClass} mt-6`}>
@@ -204,10 +216,14 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-          <section aria-label="Summary" className="mt-8 grid overflow-hidden rounded-md border border-border bg-surface sm:grid-cols-3">
+          <section
+            aria-label="Summary"
+            className="mt-8 grid overflow-hidden rounded-lg border border-border bg-surface sm:grid-cols-3"
+          >
             <SummaryStat
               label="Streak"
               value={plural(streak, 'day')}
+              emphasis
               context={
                 streak === 0
                   ? 'Complete a task to start a streak.'
@@ -241,85 +257,119 @@ export default function Dashboard() {
             </div>
           ) : null}
 
-          <div className="mt-6 grid gap-6 xl:grid-cols-12">
-            <div className="space-y-6 xl:col-span-8">
+          <div className="mt-8 grid gap-8 xl:grid-cols-12">
+            <div className="space-y-8 xl:col-span-8">
               <section aria-labelledby="today-heading">
-                <h2
-                  id="today-heading"
-                  className="font-display text-h2 font-semibold tracking-tight text-ink"
-                >
-                  Today
-                </h2>
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="eyebrow">Today</p>
+                    <h2
+                      id="today-heading"
+                      className="mt-2 font-display text-h2 font-semibold text-ink"
+                    >
+                      What is due
+                    </h2>
+                  </div>
+                  {todayTasks.length > 0 ? (
+                    <p className="text-xs text-ink-muted">
+                      {todayProgress.percentage}% of today complete
+                    </p>
+                  ) : null}
+                </div>
+
                 {todayTasks.length === 0 ? (
-                  <div className="mt-3 rounded-md border border-border bg-sunken p-5">
+                  <div className="mt-3 rounded-lg border border-border bg-sunken p-5">
                     <p className="text-sm font-semibold text-ink">No tasks due today.</p>
                     {activePlan ? (
-                      <Link
-                        to={`/plans/${activePlan.id}`}
-                        className="mt-2 inline-block text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink"
-                      >
+                      <Link to={`/plans/${activePlan.id}`} className={`${textLinkClass} mt-2 inline-block text-sm`}>
                         Open {activePlan.subject}
                       </Link>
                     ) : null}
                   </div>
                 ) : (
-                  <ul className="mt-3 overflow-hidden rounded-md border border-border bg-surface">
-                    {todayTasks.map((task) => (
-                      <li
-                        key={task.id}
-                        className="flex items-start gap-3 border-t border-border px-4 py-3 first:border-t-0"
-                      >
-                        <input
-                          id={`today-task-${task.id}`}
-                          type="checkbox"
-                          checked={task.completed}
-                          disabled={pendingTaskId === task.id}
-                          onChange={() => toggleTask(task.id)}
-                          className={checkboxClass}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <label
-                            htmlFor={`today-task-${task.id}`}
-                            className="block text-sm text-ink"
-                          >
-                            {task.description}
-                          </label>
-                          <p className="mt-1 text-xs text-ink-muted">
-                            {task.subject}, {task.topic}
-                          </p>
-                        </div>
-                        {task.completed ? (
-                          <span className="shrink-0 rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
-                            Complete
-                          </span>
-                        ) : null}
-                        <Link
-                          to={`/plans/${task.planId}`}
-                          className="shrink-0 text-xs text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink"
+                  <div className="mt-3 overflow-hidden rounded-lg border border-border bg-surface">
+                    <div className="border-b border-border bg-sunken px-4 py-3">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-ink-muted">
+                        <span>
+                          {todayProgress.completed} of {todayTasks.length} tasks complete
+                        </span>
+                        <span className="font-semibold text-ink">
+                          {todayProgress.percentage}%
+                        </span>
+                      </div>
+                      <ProgressBar
+                        value={todayProgress.percentage}
+                        label="Today progress"
+                        className="mt-2"
+                      />
+                    </div>
+                    <ul>
+                      {todayTasks.map((task) => (
+                        <li
+                          key={task.id}
+                          className="flex items-start gap-3 border-t border-border px-4 py-3.5 transition-colors duration-150 first:border-t-0 hover:bg-sunken"
                         >
-                          Open plan
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                          <input
+                            id={`today-task-${task.id}`}
+                            type="checkbox"
+                            checked={task.completed}
+                            disabled={pendingTaskId === task.id}
+                            onChange={() => toggleTask(task.id)}
+                            className={checkboxClass}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <label
+                              htmlFor={`today-task-${task.id}`}
+                              className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
+                            >
+                              {task.description}
+                            </label>
+                            <p className="mt-1 text-xs text-ink-muted">
+                              {task.subject}, {task.topic}
+                            </p>
+                          </div>
+                          {task.completed ? (
+                            <span className="shrink-0 rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
+                              Complete
+                            </span>
+                          ) : null}
+                          <Link
+                            to={`/plans/${task.planId}`}
+                            className="shrink-0 text-xs text-ink-muted underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink"
+                          >
+                            Open plan
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </section>
 
               <section aria-labelledby="plans-heading">
-                <h2
-                  id="plans-heading"
-                  className="font-display text-h2 font-semibold tracking-tight text-ink"
-                >
-                  Your plans
-                </h2>
-                <ul className="mt-3 overflow-hidden rounded-md border border-border bg-surface">
+                <div className="flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <p className="eyebrow">Plans</p>
+                    <h2
+                      id="plans-heading"
+                      className="mt-2 font-display text-h2 font-semibold text-ink"
+                    >
+                      Your plans
+                    </h2>
+                  </div>
+                  <p className="text-xs text-ink-muted">
+                    {plural(plans.length, 'plan')} saved
+                  </p>
+                </div>
+
+                <ul className="mt-3 overflow-hidden rounded-lg border border-border bg-surface">
                   {plans.map(({ plan, tasks }) => {
                     const progress = progressFor(tasks);
 
                     return (
                       <li
                         key={plan.id}
-                        className="border-t border-border px-4 py-4 first:border-t-0"
+                        className="border-t border-border px-4 py-4 transition-colors duration-150 first:border-t-0 hover:bg-sunken"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
@@ -330,25 +380,26 @@ export default function Dashboard() {
                               {examLine(plan.examDate)}
                             </p>
                           </div>
-                          <Link
-                            to={`/plans/${plan.id}`}
-                            className="shrink-0 text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink"
-                          >
-                            Open plan
-                          </Link>
+                          <div className="flex shrink-0 items-center gap-3">
+                            <span className="rounded-xs border border-border bg-paper px-2 py-1 text-2xs font-semibold tabular-nums text-ink-muted">
+                              {progress.percentage}%
+                            </span>
+                            <Link
+                              to={`/plans/${plan.id}`}
+                              className={`${textLinkClass} text-sm`}
+                            >
+                              Open plan
+                            </Link>
+                          </div>
                         </div>
                         <div className="mt-3">
-                          <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs text-ink-muted">
-                            <span>
-                              {progress.completed} of {progress.total} tasks complete
-                            </span>
-                            <span className="font-semibold text-ink">{progress.percentage}%</span>
-                          </div>
                           <ProgressBar
                             value={progress.percentage}
                             label={`${plan.subject} progress`}
-                            className="mt-2"
                           />
+                          <p className="mt-2 text-xs text-ink-muted">
+                            {progress.completed} of {progress.total} tasks complete
+                          </p>
                         </div>
                       </li>
                     );
@@ -358,15 +409,18 @@ export default function Dashboard() {
             </div>
 
             <aside className="xl:col-span-4">
-              <div className="rounded-md border border-border bg-surface p-5">
-                <h2 className="font-display text-h2 font-semibold tracking-tight text-ink">
+              <div className="rounded-lg border border-border border-l-2 border-l-accent bg-sunken p-5 xl:sticky xl:top-8">
+                <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
                   This week
+                </p>
+                <h2 className="mt-2 font-display text-h2 font-semibold text-ink">
+                  The week ahead
                 </h2>
                 {weekProgress.total === 0 ? (
-                  <p className="mt-2 text-sm text-ink-muted">No tasks scheduled this week.</p>
+                  <p className="mt-3 text-sm text-ink-muted">No tasks scheduled this week.</p>
                 ) : (
                   <>
-                    <p className="mt-2 text-sm text-ink">
+                    <p className="mt-3 text-sm text-ink">
                       {weekProgress.completed} of {weekProgress.total} tasks complete
                     </p>
                     <ProgressBar
@@ -382,7 +436,7 @@ export default function Dashboard() {
                 {activePlan ? (
                   <Link
                     to={`/plans/${activePlan.id}`}
-                    className="mt-4 inline-block text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink"
+                    className={`${textLinkClass} mt-4 inline-block text-sm`}
                   >
                     Open {activePlan.subject}
                   </Link>

@@ -9,7 +9,10 @@ const QUIZ_QUESTIONS = 5;
 const DECK_CARDS = 8;
 
 const retryLinkClass =
-  'mt-2 text-sm font-semibold underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+  'mt-2 text-sm font-semibold underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+
+const closeLinkClass =
+  'shrink-0 text-sm text-ink-muted underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
 function topicKey(topic) {
   return topic.toLowerCase();
@@ -40,11 +43,11 @@ async function fetchTools(planId) {
 
 function ToolsSkeleton() {
   return (
-    <div aria-busy="true" aria-live="polite" className="mt-3">
+    <div aria-busy="true" aria-live="polite" className="mt-4">
       <p className="text-sm text-ink-muted">Loading your study tools.</p>
       <div
         aria-hidden="true"
-        className="mt-3 overflow-hidden rounded-md border border-border bg-surface"
+        className="mt-3 overflow-hidden rounded-lg border border-border bg-surface"
       >
         {[0, 1, 2].map((row) => (
           <div key={row} className="border-t border-border px-4 py-4 first:border-t-0">
@@ -61,9 +64,10 @@ function ToolError({ message, onRetry }) {
   return (
     <div
       role="alert"
-      className="rounded-md border border-border border-l-2 border-l-error bg-surface px-4 py-3 text-sm text-error"
+      className="mt-3 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
     >
-      <p>{message}</p>
+      <p className="font-semibold">Could not load your study tools.</p>
+      <p className="mt-1">{message}</p>
       <button type="button" onClick={onRetry} className={retryLinkClass}>
         Try again
       </button>
@@ -80,10 +84,7 @@ function GeneratingPanel({ kind, topic }) {
           : `Generating ${plural(DECK_CARDS, 'card')} for ${topic}.`}
       </p>
       {kind === 'quiz' ? (
-        <div
-          aria-hidden="true"
-          className="mt-4 rounded-md border border-border bg-surface p-5"
-        >
+        <div aria-hidden="true" className="mt-4 rounded-lg border border-border bg-surface p-5">
           <div className="h-5 w-3/4 rounded-sm bg-sunken motion-safe:animate-pulse" />
           <div className="mt-4 space-y-2">
             {[0, 1, 2, 3].map((row) => (
@@ -94,7 +95,7 @@ function GeneratingPanel({ kind, topic }) {
       ) : (
         <div
           aria-hidden="true"
-          className="mt-4 flex min-h-60 flex-col justify-center rounded-md border border-border bg-surface p-6"
+          className="mt-4 flex min-h-60 flex-col justify-center rounded-lg border border-border bg-surface p-6"
         >
           <div className="h-3 w-14 rounded-sm bg-sunken motion-safe:animate-pulse" />
           <div className="mt-4 h-6 w-2/3 rounded-sm bg-sunken motion-safe:animate-pulse" />
@@ -246,12 +247,20 @@ export default function StudyTools({ planId, topics }) {
 
   return (
     <section aria-labelledby="study-tools-heading">
-      <h2
-        id="study-tools-heading"
-        className="font-display text-h2 font-semibold tracking-tight text-ink"
-      >
-        Study tools
-      </h2>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="eyebrow">Study tools</p>
+          <h2
+            id="study-tools-heading"
+            className="mt-2 font-display text-h2 font-semibold text-ink"
+          >
+            Practice by topic
+          </h2>
+        </div>
+        {topics.length > 0 ? (
+          <p className="text-xs text-ink-muted">{plural(topics.length, 'topic')}</p>
+        ) : null}
+      </div>
       <p className="mt-2 text-sm text-ink-muted">
         Practise a topic with a quiz or a flashcard deck. Tools are generated from the topics in
         this plan.
@@ -259,26 +268,16 @@ export default function StudyTools({ planId, topics }) {
 
       {loading ? <ToolsSkeleton /> : null}
 
-      {!loading && loadError ? (
-        <div
-          role="alert"
-          className="mt-3 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
-        >
-          <p>{loadError}</p>
-          <button type="button" onClick={retryLoad} className={retryLinkClass}>
-            Try again
-          </button>
-        </div>
-      ) : null}
+      {!loading && loadError ? <ToolError message={loadError} onRetry={retryLoad} /> : null}
 
       {!loading && !loadError ? (
         <>
           {topics.length === 0 ? (
-            <div className="mt-3 rounded-md border border-border bg-sunken p-5">
+            <div className="mt-3 rounded-lg border border-border bg-sunken p-5">
               <p className="text-sm font-semibold text-ink">No topics in this plan.</p>
             </div>
           ) : (
-            <ul className="mt-3 overflow-hidden rounded-md border border-border bg-surface">
+            <ul className="mt-4 overflow-hidden rounded-lg border border-border bg-surface">
               {topics.map((topic) => {
                 const quiz = quizzesByTopic.get(topicKey(topic));
                 const deck = decksByTopic.get(topicKey(topic));
@@ -299,14 +298,20 @@ export default function StudyTools({ planId, topics }) {
                 return (
                   <li
                     key={topic}
-                    className="border-t border-border px-4 py-4 first:border-t-0"
+                    className="border-t border-border px-4 py-4 transition-colors duration-150 first:border-t-0 hover:bg-sunken"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-semibold text-ink">{topic}</h3>
-                        <p className="mt-1 text-xs text-ink-muted">
-                          {status ? `${status}.` : 'No study tools generated yet.'}
-                        </p>
+                      <div className="flex min-w-0 items-start gap-3">
+                        <span
+                          aria-hidden="true"
+                          className="mt-2 h-1.5 w-1.5 shrink-0 bg-accent"
+                        />
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-semibold text-ink">{topic}</h3>
+                          <p className="mt-1 text-xs text-ink-muted">
+                            {status ? `${status}.` : 'No study tools generated yet.'}
+                          </p>
+                        </div>
                       </div>
                       <div className="flex shrink-0 flex-wrap gap-2">
                         <button
@@ -338,24 +343,22 @@ export default function StudyTools({ planId, topics }) {
               id="study-tools-workspace"
               role="region"
               aria-label={`${active.kind === 'quiz' ? 'Quiz' : 'Flashcards'} for ${active.topic}`}
-              className="mt-4 rounded-md border border-border bg-sunken p-5"
+              className="mt-4 rounded-lg border border-border border-l-2 border-l-accent bg-sunken p-5"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
                 <div className="min-w-0">
+                  <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                    {active.kind === 'quiz' ? 'Quiz' : 'Flashcards'}
+                  </p>
                   <h3
                     ref={headingRef}
                     tabIndex={-1}
-                    className="font-display text-h3 font-semibold text-ink focus:outline-none"
+                    className="mt-1 font-display text-h3 font-semibold text-ink focus:outline-none"
                   >
-                    {active.kind === 'quiz' ? 'Quiz' : 'Flashcards'}
+                    {active.topic}
                   </h3>
-                  <p className="mt-1 text-xs text-ink-muted">{active.topic}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={closeTool}
-                  className="shrink-0 text-sm text-ink-muted underline underline-offset-2 transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                >
+                <button type="button" onClick={closeTool} className={closeLinkClass}>
                   Close
                 </button>
               </div>

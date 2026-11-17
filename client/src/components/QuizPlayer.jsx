@@ -3,9 +3,9 @@ import ProgressBar from './ProgressBar';
 import { secondaryButtonClass } from './PrimaryButton';
 
 const optionBase =
-  'flex w-full items-start gap-3 rounded-sm border px-4 py-3 text-left text-sm text-ink transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+  'flex w-full items-start gap-3 rounded-sm border px-4 py-3.5 text-left text-sm text-ink transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 const optionIdle = 'cursor-pointer border-border-strong bg-surface hover:bg-sunken';
-const optionAnswered = 'cursor-default bg-surface';
+const optionAnswered = 'cursor-default';
 
 const letters = ['A', 'B', 'C', 'D'];
 
@@ -15,10 +15,22 @@ function optionStateClass(answered, isAnswer, isChosen) {
   }
 
   if (isAnswer) {
-    return 'border-success';
+    return 'border-success bg-accent-wash';
   }
 
-  return isChosen ? 'border-error' : 'border-border';
+  return isChosen ? 'border-error bg-sunken' : 'border-border bg-surface';
+}
+
+function letterStateClass(answered, isAnswer, isChosen) {
+  if (!answered) {
+    return 'border-border-strong text-ink-muted';
+  }
+
+  if (isAnswer) {
+    return 'border-success text-success';
+  }
+
+  return isChosen ? 'border-error text-error' : 'border-border text-ink-muted';
 }
 
 export default function QuizPlayer({ questions, autoFocus = true }) {
@@ -121,14 +133,15 @@ export default function QuizPlayer({ questions, autoFocus = true }) {
   if (finished) {
     return (
       <div>
+        <p className="eyebrow">Result</p>
         <h4
           ref={scoreRef}
           tabIndex={-1}
-          className="font-display text-h2 font-semibold tracking-tight text-ink focus:outline-none"
+          className="mt-3 font-display text-h2 font-semibold text-ink focus:outline-none"
         >
           Quiz complete
         </h4>
-        <p className="mt-4 font-display text-h1 font-semibold tabular-nums text-ink">
+        <p className="mt-4 font-display text-stat font-semibold tabular-nums text-ink">
           {score} of {questions.length} correct
         </p>
         <ProgressBar
@@ -150,7 +163,7 @@ export default function QuizPlayer({ questions, autoFocus = true }) {
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-xs font-semibold uppercase text-ink-muted">
+        <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Question {current + 1} of {questions.length}
         </p>
         <p className="text-xs text-ink-muted">
@@ -198,7 +211,11 @@ export default function QuizPlayer({ questions, autoFocus = true }) {
               >
                 <span
                   aria-hidden="true"
-                  className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-xs border border-border-strong text-2xs font-semibold text-ink-muted"
+                  className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-xs border text-2xs font-semibold ${letterStateClass(
+                    answered,
+                    isAnswer,
+                    isChosen
+                  )}`}
                 >
                   {letters[index]}
                 </span>
@@ -238,7 +255,7 @@ export default function QuizPlayer({ questions, autoFocus = true }) {
           <p className="mt-2 text-sm text-ink-muted">{question.explanation}</p>
         </div>
       ) : (
-        <p className="mt-3 text-2xs text-ink-muted">
+        <p className="mt-3 text-xs text-ink-muted">
           Use the arrow keys to move between options, then press Enter to choose an answer.
         </p>
       )}
