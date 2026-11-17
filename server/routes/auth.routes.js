@@ -7,10 +7,10 @@ const { registerSchema, loginSchema } = require('../validators/auth.validator');
 
 const router = Router();
 
-router.use(authLimiter);
-
-router.post('/register', validate(registerSchema), register);
-router.post('/login', validate(loginSchema), login);
+// Only the credential routes get the strict limiter. GET /me runs on every
+// app load, so counting it here would lock active users out of their session.
+router.post('/register', authLimiter, validate(registerSchema), register);
+router.post('/login', authLimiter, validate(loginSchema), login);
 router.get('/me', requireAuth, me);
 router.delete('/me', requireAuth, deleteAccount);
 
