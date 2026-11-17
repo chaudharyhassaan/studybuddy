@@ -40,4 +40,18 @@ const planLimiter = rateLimit({
   },
 });
 
-module.exports = { globalLimiter, authLimiter, planLimiter };
+// Also keyed by user, so one account cannot use up another account's budget.
+const aiLimiter = rateLimit({
+  windowMs: WINDOW_MS,
+  limit: 20,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  keyGenerator: (req) => (req.user ? `user:${req.user.id}` : ipKeyGenerator(req.ip)),
+  message: {
+    error: {
+      message: 'AI request limit reached. Try again later.',
+    },
+  },
+});
+
+module.exports = { globalLimiter, authLimiter, planLimiter, aiLimiter };
