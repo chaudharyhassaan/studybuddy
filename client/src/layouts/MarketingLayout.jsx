@@ -3,6 +3,7 @@ import { List } from '@phosphor-icons/react';
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
+import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 
 const navLinkClass =
@@ -43,7 +44,7 @@ export default function MarketingLayout() {
         {menuOpen ? (
           <div
             id="marketing-nav"
-            className="border-t border-border bg-surface px-4 py-2 md:hidden"
+            className="enter-panel border-t border-border bg-surface px-4 py-2 md:hidden"
           >
             <nav aria-label="Mobile" className="divide-y divide-border">
               <a
@@ -65,7 +66,9 @@ export default function MarketingLayout() {
         ) : null}
       </header>
       <main className="flex-1">
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </main>
       <Footer />
     </div>

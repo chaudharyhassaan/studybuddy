@@ -2,6 +2,7 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
 import RouteSkeleton from '../components/RouteSkeleton';
+import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 import { textLinkClass } from '../components/PrimaryButton';
 
@@ -31,7 +32,9 @@ export default function AuthLayout() {
         </div>
       </header>
       <main className="flex flex-1 items-start justify-center px-4 py-12 md:px-6 md:py-16">
-        <Outlet />
+        <PageTransition className="flex w-full justify-center">
+          <Outlet />
+        </PageTransition>
       </main>
       <Footer />
     </div>

@@ -366,7 +366,7 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                <ul className="mt-3 overflow-hidden rounded-lg border border-border bg-surface">
+                <ul className="stagger-list mt-3 overflow-hidden rounded-lg border border-border bg-surface">
                   {plans.map(({ plan, tasks }) => {
                     const progress = progressFor(tasks);
 

@@ -3,6 +3,7 @@ import { GearSix, List, PlusSquare, SignOut, SquaresFour } from '@phosphor-icons
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
+import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 import { secondaryButtonClass } from '../components/PrimaryButton';
 
@@ -121,7 +122,7 @@ export default function AppLayout() {
           {menuOpen ? (
             <div
               id="mobile-nav"
-              className="border-b border-border bg-surface px-4 py-4 md:hidden"
+              className="enter-panel border-b border-border bg-surface px-4 py-4 md:hidden"
             >
               <nav aria-label="Mobile" className="space-y-1">
                 {navItems.map(({ to, label, icon: Icon }) => (
@@ -163,7 +164,9 @@ export default function AppLayout() {
 
           <main className="flex-1 px-4 py-8 md:px-6 md:py-10 lg:px-10">
             <div className="mx-auto max-w-content">
-              <Outlet />
+              <PageTransition>
+                <Outlet />
+              </PageTransition>
             </div>
           </main>
         </div>

@@ -277,7 +277,7 @@ export default function StudyTools({ planId, topics }) {
               <p className="text-sm font-semibold text-ink">No topics in this plan.</p>
             </div>
           ) : (
-            <ul className="mt-4 overflow-hidden rounded-lg border border-border bg-surface">
+            <ul className="stagger-list mt-4 overflow-hidden rounded-lg border border-border bg-surface">
               {topics.map((topic) => {
                 const quiz = quizzesByTopic.get(topicKey(topic));
                 const deck = decksByTopic.get(topicKey(topic));

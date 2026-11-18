@@ -417,7 +417,7 @@ export default function PlanDetail() {
                 <p className="text-sm font-semibold text-ink">No tasks in this plan yet.</p>
               </div>
             ) : (
-              <div className="mt-3 space-y-4">
+              <div className="stagger-list mt-3 space-y-4">
                 {groups.map((group) => (
                   <div
                     key={group.date}

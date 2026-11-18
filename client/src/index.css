@@ -219,21 +219,23 @@
     background-color: var(--color-accent);
   }
 
-  /* Page and list entrances. Transform and opacity only. */
+  /* Page and list entrances. Transform and opacity only.
+     Backwards fill keeps no transform behind once the entrance ends,
+     so sticky and fixed descendants keep their normal containing block. */
   .page-enter {
-    animation: page-enter 320ms var(--ease-out) both;
+    animation: page-enter 320ms var(--ease-out) backwards;
   }
 
   .enter-up {
-    animation: item-enter 300ms var(--ease-out) both;
+    animation: item-enter 300ms var(--ease-out) backwards;
   }
 
   .enter-panel {
-    animation: panel-enter 220ms var(--ease-out) both;
+    animation: panel-enter 220ms var(--ease-out) backwards;
   }
 
   .stagger-list > * {
-    animation: item-enter 300ms var(--ease-out) both;
+    animation: item-enter 300ms var(--ease-out) backwards;
   }
 
   .stagger-list > :nth-child(2) { animation-delay: 30ms; }
@@ -253,7 +255,7 @@
   }
 
   dialog[open] {
-    animation: dialog-enter 200ms var(--ease-out) both;
+    animation: dialog-enter 200ms var(--ease-out) backwards;
   }
 }
 

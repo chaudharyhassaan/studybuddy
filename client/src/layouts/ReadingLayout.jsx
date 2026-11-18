@@ -1,5 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import Footer from '../components/Footer';
+import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 import { textLinkClass } from '../components/PrimaryButton';
 
@@ -16,7 +17,9 @@ export default function ReadingLayout() {
         </div>
       </header>
       <main className="flex-1 px-4 py-12 md:px-6 md:py-16">
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </main>
       <Footer />
     </div>
