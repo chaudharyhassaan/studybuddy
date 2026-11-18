@@ -1,6 +1,6 @@
 # StudyBuddy Planner Design System
 
-Status: draft 1, ready for build.
+Status: draft 2, updated for the shipped tokens, brand mark and motion.
 Scope: light theme only, web, students aged 13 and up.
 Related: `AGENTS.md` (rules), `docs/tailwind-tokens.md` (tokens to paste into the client).
 
@@ -15,12 +15,13 @@ Personality: the organized classmate who already made a plan and is willing to s
 
 Visual principles:
 
-- Flat surfaces with hairline borders and three tonal layers (paper, surface, sunken).
+- Flat surfaces with hairline borders and five tonal layers (paper, surface, sunken, sunken-deep, accent-wash).
 - Fraunces for display and headings, Source Sans 3 for everything else.
 - One clay accent used for action and selection only.
 - Generous spacing and short line lengths. The screen should feel unhurried.
 - Real product UI shown as the main visual. No illustration style, no generated art.
 - Status colors carry meaning, never decoration.
+- Motion is rare and purposeful: one short entrance per view, a capped list stagger, a panel for the mobile menu, a dialog entrance, and a press-only scale. Nothing on hover, nothing tied to scroll.
 
 The skill's flat design direction fits: no shadows, typography-led hierarchy, color-only hover states, fast loading. Its suggested teal palette, pure white cards and Lucide icons conflict with `AGENTS.md`, so they are rejected. The palette below is a warm paper and clay system adapted to those rules.
 
@@ -35,6 +36,7 @@ All values are exact. No pure white and no pure black appear anywhere.
 | `paper` | `#F4F0E6` | Page background |
 | `surface` | `#FAF7EF` | Cards, panels, sidebar, product preview frames |
 | `sunken` | `#EAE4D6` | Recessed layers, selected navigation, stat strips, skeleton base |
+| `sunken-deep` | `#E0D7C4` | Pressed state for quiet and secondary controls |
 | `border` | `#D7CFBE` | Hairline dividers and card edges |
 | `border-strong` | `#8B8371` | Input borders, interactive control boundaries |
 | `ink` | `#23261F` | Primary text |
@@ -42,7 +44,8 @@ All values are exact. No pure white and no pure black appear anywhere.
 | `accent` | `#8F4529` | Primary buttons, links, active tab, focus outline |
 | `accent-hover` | `#7A3920` | Hover for accent buttons and accent text |
 | `accent-pressed` | `#6B3119` | Pressed primary button |
-| `accent-soft` | `#F1E3D5` | Selected row, selected quiz option, quiet accent block |
+| `accent-soft` | `#F1E3D5` | Selected row, avatar fill, quiet accent block |
+| `accent-wash` | `#F7EDE3` | Quiet accent surface: selected nav, countdown, streak, correct option |
 | `on-accent` | `#FBF8F0` | Text and icons on accent fills |
 | `success` | `#2F6B45` | Completed, correct, on track |
 | `warning` | `#8A5B12` | Due soon, attention |
@@ -54,9 +57,11 @@ Usage balance: roughly 70 percent paper, 20 percent surface and sunken, 7 percen
 Rules:
 
 - Accent fills are limited to primary buttons, selected options, small state marks and the active tab rule. Never a full section background.
-- `accent-soft` is a selected state, not a decorative panel color.
+- `accent-soft` is an avatar fill and a quiet selected state. `accent-wash` is the larger quiet accent surface for the streak stat, countdown card, selected navigation and a correct quiz option. Both stay secondary to the paper and surface layers.
+- `sunken-deep` is a pressed state for secondary and quiet controls. It is not a text surface: `ink-muted` on it is 4.27:1, below AA for normal text.
 - No gradients, no color mixing, no opacity tricks for color variants. Use the tokens.
 - `border` is decorative separation. Never use it as the only boundary of a form control. Inputs use `border-strong`.
+- `border` against `sunken-deep` is 1.08:1, so do not draw hairlines between those two tones.
 
 ### Contrast check (WCAG AA)
 
@@ -87,10 +92,15 @@ Measured with the standard relative luminance formula. Normal text needs 4.5:1, 
 | `border-strong` on `paper` | 3.31:1 | 3:1 | Pass, non-text |
 | `border-strong` on `surface` | 3.51:1 | 3:1 | Pass, non-text |
 | `accent` on `paper` | 6.05:1 | 3:1 | Pass, focus indicator |
+| `ink` on `accent-wash` | 13.28:1 | 4.5:1 | Pass |
+| `ink-muted` on `accent-wash` | 5.28:1 | 4.5:1 | Pass |
+| `accent` on `accent-wash` | 5.96:1 | 4.5:1 | Pass |
+| `ink` on `sunken-deep` | 10.73:1 | 4.5:1 | Pass |
+| `ink-muted` on `sunken-deep` | 4.27:1 | 4.5:1 | Fail, no muted text on this tone |
 
 The hairline `border` at 1.36:1 against `paper` is a decorative separator only. It is never the sole indicator of a control or a state.
 
-Status text also passes on `sunken`: `success` 5.01:1, `warning` 4.62:1, `error` 5.07:1, `accent` 5.43:1. `ink-muted` on `accent-soft` is 4.85:1.
+Status text also passes on `sunken`: `success` 5.01:1, `warning` 4.62:1, `error` 5.07:1, `accent` 5.43:1. `ink-muted` on `accent-soft` is 4.85:1. On `accent-wash`, status text passes as well: `success` 5.49:1, `warning` 5.07:1, `error` 5.57:1.
 
 ## 3. Typography
 
@@ -115,16 +125,20 @@ Do not use 300 weights. Do not use Fraunces below 20px. Do not set all caps beyo
 
 | Token | Size | Line height | Tracking | Weight | Use |
 | --- | --- | --- | --- | --- | --- |
-| `text-display` | 48px / 3rem | 1.06 | -0.02em | 600 | Landing hero at 1024px and up |
-| `text-title` | 36px / 2.25rem | 1.12 | -0.015em | 600 | Landing hero on mobile, auth headings, section openers |
-| `text-h1` | 32px / 2rem | 1.2 | -0.01em | 600 | App page titles |
-| `text-h2` | 24px / 1.5rem | 1.3 | -0.005em | 600 | Section headings, plan subject |
-| `text-h3` | 20px / 1.25rem | 1.35 | 0 | 600 | Card titles, quiz question |
-| `text-lg` | 18px / 1.125rem | 1.6 | 0 | 400 | Lead paragraphs, reading view |
-| `text-base` | 16px / 1rem | 1.6 | 0 | 400 | Default body |
+| `text-display` | `clamp(2.75rem, 5.6vw, 4.25rem)` | 1.02 | -0.028em | 600 | Landing hero, 404 numeral |
+| `text-title` | `clamp(2rem, 3.6vw, 2.75rem)` | 1.1 | -0.022em | 600 | Page titles, section openers, closing band |
+| `text-h1` | `clamp(1.75rem, 2.8vw, 2.15rem)` | 1.16 | -0.018em | 600 | App page headings, plan subject |
+| `text-h2` | 24px / 1.5rem | 1.28 | -0.01em | 600 | Section headings, card headings |
+| `text-h3` | 20px / 1.25rem | 1.35 | -0.004em | 600 | Card titles, quiz question, nav page name |
+| `text-stat` | `clamp(2rem, 3.4vw, 2.75rem)` | 1 | -0.03em | 600 | Streak, percentage and countdown values |
+| `text-lg` | 18px / 1.125rem | 1.6 | 0 | 400 | Lead paragraphs, hero body |
+| `text-base` | 16px / 1rem | 1.65 | 0 | 400 | Default body |
 | `text-sm` | 15px / 0.9375rem | 1.55 | 0 | 400 | Dense UI, table cells, button labels |
-| `text-xs` | 13px / 0.8125rem | 1.45 | 0.01em | 600 | Form labels, table headers, helper text (helper at 400) |
-| `text-2xs` | 12px / 0.75rem | 1.4 | 0.08em | 600 | Eyebrow labels, badges |
+| `text-xs` | 13px / 0.8125rem | 1.45 | 0.005em | 600 | Form labels, metadata, helper text (helper at 400) |
+| `text-2xs` | 12px / 0.75rem | 1.4 | 0.06em | 600 | Badges, compact labels |
+| `text-label` | 11px / 0.6875rem | 1.2 | 0.14em | 600 | Uppercase eyebrow labels |
+
+The three largest steps are fluid so the same tokens hold at 360px and 1440px without breakpoint-specific sizes. The `.eyebrow` class packages the `text-label` style with a 24px clay rule before the label; use it for section markers instead of hand-building uppercase text.
 
 Rules:
 
@@ -155,9 +169,9 @@ Rules:
 | `24` | 96px | Landing hero breathing room |
 | `32` | 128px | Large vertical gaps between landing bands |
 
-Page widths: content 1120px, reading 720px, forms 640px, auth card 400px, quiz 720px.
+Page widths: content 1120px, reading 700px, forms 640px, auth card 420px, register frame 820px, quiz 720px.
 
-Breakpoints: 375px, 768px, 1024px, 1280px. Page gutters: 16px, 24px, 40px.
+Breakpoints: 360px, 768px, 1024px, 1280px, 1440px. Page gutters: 16px, 24px, 40px.
 
 ### Corner radius
 
@@ -172,21 +186,46 @@ Breakpoints: 375px, 768px, 1024px, 1280px. Page gutters: 16px, 24px, 40px.
 
 ### Borders and depth
 
-- Depth comes from three tones and 1px borders. There is no shadow anywhere.
+- Depth comes from the five tones and 1px borders. There is no shadow anywhere.
 - Hairline: 1px `border`, for card edges, section dividers, table row dividers.
 - Strong: 1px `border-strong`, for input, select, textarea, checkbox and secondary button boundaries.
+- Accent edge: a 2px left or top border in `accent` marks the current navigation item and the countdown, summary and flashcard panels. No thick frames, no coloured outlines around whole sections.
 - Focus: 2px `accent` outline with 2px offset. Never a shadow ring.
-- Hover: color change only. No lift, scale, glow, translate or border thickness change.
+- Hover: colour change only. No lift, scale, glow, translate or border thickness change.
+- Press: `.pressable` controls scale to 0.985 for the duration of the press, then return. This is the only scale in the system and it never runs on hover.
+
+### Motion
+
+Motion exists so state changes read clearly, not to decorate. Only `transform` and `opacity` are animated, and every entrance is small: 6px to 10px of travel, never a slide across the screen.
+
+| Token or class | Where | Spec |
+| --- | --- | --- |
+| `--ease-out` | Entrances and presses | `cubic-bezier(0.23, 1, 0.32, 1)` |
+| `--ease-in-out` | Available for symmetric moves | `cubic-bezier(0.77, 0, 0.175, 1)` |
+| `.page-enter` | Route change, wraps the outlet in every shell | 320ms, opacity 0 to 1, 10px up |
+| `.stagger-list` | Plan list, schedule day groups, study-topic list | 300ms per item, 30ms steps, last step capped at 240ms |
+| `.enter-panel` | Mobile navigation panel | 220ms, opacity plus 4px down |
+| `dialog[open]` | Delete confirmations | 200ms, opacity plus 8px up and 0.985 scale |
+| `.pressable:active` | Buttons and pressable links | Scale 0.985, 110ms |
+
+Rules:
+
+- Entrances use `backwards` fill, so no transform is left behind once the animation ends and sticky or fixed descendants keep their containing block.
+- No hover animation, no scroll-driven animation, no looping motion other than the skeleton pulse, no parallax, no spring, no bounce.
+- The stagger never exceeds eight steps; long lists animate the remainder together.
+- Under `prefers-reduced-motion: reduce`, every entrance and transition is removed and the press scale is disabled. The interface must read the same without any motion.
 
 ## 5. Component styles
 
 ### Buttons
 
-Primary: `accent` background, `on-accent` text, 1px `accent` border, 4px radius. Medium height 40px with 16px horizontal padding and 15px semibold text. Small height 32px with 12px horizontal padding. Large height 44px with 20px horizontal padding. Use 44px for primary and secondary actions below 768px. Small is for dense desktop tables only. Hover changes the background to `accent-hover`. Pressed uses `accent-pressed`. Disabled uses `sunken` background, `ink-muted` text and `border` edge, with no pointer events. No shadow, no icon unless the label needs one.
+Primary: `accent` background, `on-accent` text, 1px `accent` border, 4px radius. Medium height 40px with 16px horizontal padding and 15px semibold text. Small height 32px with 12px horizontal padding. Large height 44px with 20px horizontal padding. Use 44px for primary and secondary actions below 768px. Small is for dense desktop tables only. Hover changes the background to `accent-hover`. Pressed uses `accent-pressed` plus the shared 0.985 press scale. Disabled uses `sunken` background, `ink-muted` text and `border` edge, with no pointer events. No shadow, no icon unless the label needs one.
 
-Secondary: transparent background, 1px `border-strong`, `ink` text, same sizes and radius. Hover changes the background to `sunken` and keeps the text `ink`.
+Secondary: `surface` background, 1px `border-strong`, `ink` text, same sizes and radius. Hover changes the background to `sunken`, pressed to `sunken-deep`. Text stays `ink`.
 
 Quiet: no border, no background, `ink-muted` text at 15px. Hover changes text to `ink`. Used for back links, cancel and low-priority actions.
+
+Pressable: primary, secondary and destructive buttons all carry the `pressable` class. It transitions colour only and adds the press scale from the motion table. Do not add the class to text links, checkboxes or rows.
 
 Destructive: solid `error` background with `on-accent` text, or quiet `error` text when the action is reversible. Solid destructive appears only in a confirmation dialog.
 
@@ -244,19 +283,19 @@ Badges: 3px radius, 1px border in the status color, transparent background, 12px
 
 ### Skeleton loaders
 
-Every loading state uses skeletons shaped like the content that will replace them. Base block: `sunken` background, 3px to 6px radius. Use a tonal pulse between 100 percent and 55 percent opacity over 1.6 seconds. No gradient shimmer, no spinner, no blank page.
+Every loading state uses skeletons shaped like the content that will replace them. Base block: `sunken` background, 3px to 6px radius. Use a tonal pulse between 100 percent and 55 percent opacity over 1.8 seconds. No gradient shimmer, no spinner, no blank page.
 
 Skeletons are `aria-hidden="true"` inside a container marked `aria-busy="true"`. Under reduced motion, keep the blocks static. Match the final layout: same heights, same number of rows, same grid.
 
 ### Navigation
 
-Marketing header: 64px tall, `paper` background, 1px `border` bottom edge. Wordmark left, links center or right, quiet "Log in" right, no primary action. Mobile: wordmark and a menu button from Phosphor. The menu panel opens instantly with no slide animation.
+Marketing header: 64px tall, `paper` background, a 2px `accent` rule above it and a 1px `border` bottom edge. Wordmark left, links right, quiet "Log in" right, no primary action. Mobile: wordmark and a menu button from Phosphor. The menu panel opens with the 220ms `.enter-panel` entrance; reduced motion shows it instantly.
 
-App shell: 240px sidebar in `surface` with a 1px `border` right edge, 64px top bar in `paper` with a 1px `border` bottom edge, content area in `paper` with 32px padding and a 1120px maximum width.
+App shell: 240px sidebar in `surface` with a 1px `border` right edge, 64px top bar in `paper` with a 1px `border` bottom edge, content area in `paper` with 32px padding and a 1120px maximum width. The top bar shows the current page name above the shell heading.
 
-Sidebar items: 40px tall, 8px horizontal padding, 4px radius, 15px text. Default text `ink-muted`. Active item uses `sunken` background, `ink` text and a 2px `accent` left border. Hover changes background to `sunken`. Current item is also marked with `aria-current="page"`.
+Sidebar items: 40px tall, 10px horizontal padding, 4px radius, 15px text, Phosphor icon at 18px. Default text `ink-muted`. Active item uses `accent-wash` background, `ink` text and a 2px `accent` left border. Hover changes background to `sunken`. Current item is also marked with `aria-current="page"`.
 
-Mobile navigation: top bar with menu button, panel with the same items, user block and logout. No animated drawer.
+Mobile navigation: top bar with menu button, panel with the same items, user block and logout. The panel enters from the top with `.enter-panel`; it is not a drawer and does not cover the page.
 
 Footer: present on every screen. `border` top edge, 32px vertical padding, three zones: wordmark and one-line description, links (How it works, Terms, Privacy), copyright. Plain text links, no social icons.
 
@@ -274,9 +313,13 @@ If Recharts appears on the dashboard: flat presentation only. No gradients, no s
 
 ### Brand mark and favicon
 
-Wordmark: "StudyBuddy" in Fraunces 600 at 20px, `ink`, tracking -0.01em. No symbol and no icon. In the footer and auth header use 18px. On accent surfaces use `on-accent`.
+Mark: a stacked-pages symbol. Two 16x20 rounded rectangles, the back one in `accent` outline and the front one filled, with three `on-accent` rule lines on the front page. The front page sits lower-left and the back page peeks out at the top-right, so the mark reads as a plan with more pages behind it. It is drawn at `32x32` and used at 28px in headers and 32px at the base size. The mark is decorative (`aria-hidden`) unless a `title` is passed, in which case it exposes an accessible name.
 
-Favicon: 32px and 16px SVG. Square `accent` background with a 3px radius and an `on-accent` "S" in Fraunces 600, centered. No gradient, no shadow. Export a 180px touch icon from the same art. Check legibility at 16px before shipping.
+Wordmark: the mark plus a two-line lockup. Line one is "StudyBuddy" in Fraunces 600 at 20px, `ink`, tracking -0.01em. Line two is "Planner" at 11px, 600, uppercase, 0.16em tracking, `ink-muted`. The whole lockup is one link to the home route with an `aria-label` of "StudyBuddy Planner, home". Use the `sm` size in every header and the footer.
+
+Favicon: derived from the same mark, `viewBox="0 0 32 32"`. `paper` rounded square, the outlined back page in `accent`, the filled front page in `accent`, and the three rule lines in `on-accent`. Keep at least one page edge visible at 16px. No gradient, no shadow. Export a 180px touch icon from the same art. Check legibility at 16px before shipping.
+
+Files: `client/src/components/LogoMark.jsx` (mark), `client/src/components/Wordmark.jsx` (lockup), `client/public/favicon.svg` (browser tab).
 
 ## 6. Screens and layouts
 
@@ -340,7 +383,7 @@ States: inline errors, error summary, disabled submit while pending, generic fai
 
 ### Dashboard (`/dashboard`)
 
-Layout: app shell. Sidebar: wordmark, nav (Dashboard, Create plan), user block at the bottom with name, email and "Log out". Top bar: page title and account menu. Content: 1120px maximum width, 32px padding.
+Layout: app shell. Sidebar: wordmark, nav (Dashboard, Create plan, Settings), user block at the bottom with avatar, name, email and "Log out". Top bar: page name above the shell label on desktop, mobile wordmark and menu on small screens. Content: 1120px maximum width, 32px padding.
 
 Header row: H1 "Your study", today's date in 13px muted text, primary "Create plan".
 
@@ -411,7 +454,7 @@ Loading: card panel skeleton with text lines. Error: "Deck not found." with a li
 
 ### Terms (`/terms`)
 
-Layout: reading shell. 64px header with wordmark and "Back to home" quiet link. Article 720px maximum width, 48px to 64px vertical padding. H1 "Terms of Service", "Last updated: [date]" in 13px muted text, then sections with H2 at 20px and body at 16px/1.7. Hairline dividers between major sections.
+Layout: reading shell. 64px header with wordmark and "Back to home" quiet link. Article 700px maximum width, 48px to 64px vertical padding. H1 "Terms of Service", "Last updated: [date]" in 13px muted text, then sections with H2 at 20px and body at 16px/1.7. Hairline dividers between major sections.
 
 Sections: what the service is, accounts, acceptable use, study content generated for the student, availability, ending an account, contact. Plain language, no invented legal entity details. Links use `accent` with underline.
 
@@ -425,7 +468,7 @@ Sections use the same type scale as Terms. A short "Your choices" block uses the
 
 ### 404
 
-Layout: marketing shell with header and footer. Centered block, 480px maximum width, 96px vertical padding. "404" at 48px Fraunces in `ink-muted`, H1 "Page not found.", one sentence: "This page does not exist. Check the address or go back to your dashboard." Primary "Go to dashboard" when signed in, otherwise "Go to home". Quiet "Back" using browser history.
+Layout: marketing shell with header and footer. Centered block, 560px maximum width, 96px vertical padding. "404" as an italic `text-display` numeral in `ink-muted`, H1 "This page does not exist.", one sentence: "Check the address, or go back to the part of StudyBuddy you were using." Primary "Go to dashboard" when signed in, otherwise "Go to home". Quiet "Back" using browser history.
 
 No illustration, no mascot, no easter egg.
 
@@ -449,8 +492,8 @@ Avoid: "Unlock your potential", "Study smarter, not harder", "Supercharge", "AI-
 - Quiz options work with native keyboard controls and announce selected state.
 - Task checkboxes have full labels, not just the checkbox.
 - Touch targets are at least 44px tall.
-- Reduced motion: skeleton pulse stops, no other motion exists.
-- Test at 375px, 768px, 1024px and 1280px. No horizontal scrolling.
+- Reduced motion: entrances, press scale and colour transitions are removed, and the skeleton pulse stops. Content order and every state stay identical.
+- Test at 360px, 768px, 1024px, 1280px and 1440px. No horizontal scrolling at 360px or 1440px.
 - The page works at 200 percent zoom without overlap.
 
 ## 9. Banned list checklist
@@ -464,6 +507,8 @@ Avoid: "Unlock your potential", "Study smarter, not harder", "Supercharge", "AI-
 - No pill buttons. Small radii only.
 - No liquid glass, radial orbs, dot grids, sparkle icons, animated arrows, cursor effects or terminal mockups.
 - No bento grids, rows of three identical cards, checkmark bullet lists or three-tier pricing.
-- No scroll animations or hover transforms. Hover is a color change.
+- No scroll animations, parallax or scroll-linked transforms.
+- No hover transforms. Hover is a colour change. The press-only 0.985 scale on `.pressable` is the single exception.
+- No looping motion except the skeleton pulse.
 - No fake counters, reviews, testimonials or metrics.
 - No "made with AI" badge in the UI.
