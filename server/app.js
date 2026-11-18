@@ -15,6 +15,13 @@ const app = express();
 
 app.disable('x-powered-by');
 
+// Render and Vercel forward requests through their own proxy and set
+// X-Forwarded-For. Trusting one hop lets express-rate-limit key on the real
+// client IP instead of the proxy address.
+if (env.isProduction) {
+  app.set('trust proxy', 1);
+}
+
 app.use(helmet());
 
 app.use(
