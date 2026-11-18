@@ -317,28 +317,32 @@ export default function Dashboard() {
                             onChange={() => toggleTask(task.id)}
                             className={checkboxClass}
                           />
-                          <div className="min-w-0 flex-1">
-                            <label
-                              htmlFor={`today-task-${task.id}`}
-                              className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
-                            >
-                              {task.description}
-                            </label>
-                            <p className="mt-1 text-xs text-ink-muted">
-                              {task.subject}, {task.topic}
-                            </p>
+                          <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                            <div className="min-w-0">
+                              <label
+                                htmlFor={`today-task-${task.id}`}
+                                className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
+                              >
+                                {task.description}
+                              </label>
+                              <p className="mt-1 text-xs text-ink-muted">
+                                {task.subject}, {task.topic}
+                              </p>
+                            </div>
+                            <div className="flex shrink-0 flex-wrap items-center gap-3">
+                              {task.completed ? (
+                                <span className="rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
+                                  Complete
+                                </span>
+                              ) : null}
+                              <Link
+                                to={`/plans/${task.planId}`}
+                                className="text-xs text-ink-muted underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink"
+                              >
+                                Open plan
+                              </Link>
+                            </div>
                           </div>
-                          {task.completed ? (
-                            <span className="shrink-0 rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
-                              Complete
-                            </span>
-                          ) : null}
-                          <Link
-                            to={`/plans/${task.planId}`}
-                            className="shrink-0 text-xs text-ink-muted underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-ink"
-                          >
-                            Open plan
-                          </Link>
                         </li>
                       ))}
                     </ul>

@@ -269,25 +269,14 @@ export default function PlanDetail() {
             {plural(plan.topics.length, 'topic')}, {plural(plan.hoursPerDay, 'hour')} per day
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-3">
-          {daysRemaining !== null ? (
-            <span className="rounded-xs border border-border bg-paper px-2.5 py-1.5 text-2xs font-semibold uppercase tracking-[0.08em] text-ink-muted">
-              {daysRemaining < 0
-                ? 'Exam passed'
-                : daysRemaining === 0
-                  ? 'Exam today'
-                  : `Exam in ${plural(daysRemaining, 'day')}`}
-            </span>
-          ) : null}
-          <button
-            ref={deleteTriggerRef}
-            type="button"
-            onClick={openDialog}
-            className="inline-flex h-11 shrink-0 items-center px-1 text-sm text-error underline decoration-border-strong underline-offset-2 transition-colors duration-150 hover:text-error-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            Delete plan
-          </button>
-        </div>
+        <button
+          ref={deleteTriggerRef}
+          type="button"
+          onClick={openDialog}
+          className="pressable inline-flex h-11 shrink-0 items-center self-start px-1 text-sm text-error underline decoration-border-strong underline-offset-2 hover:text-error-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          Delete plan
+        </button>
       </div>
 
       {actionError ? (
@@ -377,6 +366,7 @@ export default function PlanDetail() {
                       axisLine={{ stroke: 'var(--color-border)' }}
                       tick={{ fill: 'var(--color-ink-muted)', fontSize: 12 }}
                       interval="preserveStartEnd"
+                      minTickGap={16}
                     />
                     <YAxis
                       domain={[0, 100]}
@@ -457,24 +447,26 @@ export default function PlanDetail() {
                             onChange={() => toggleTask(task.id)}
                             className={checkboxClass}
                           />
-                          <div className="min-w-0 flex-1">
-                            <label
-                              htmlFor={`task-checkbox-${task.id}`}
-                              className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
-                            >
-                              {task.description}
-                            </label>
-                            <p className="mt-1 text-xs text-ink-muted">{task.topic}</p>
+                          <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                            <div className="min-w-0">
+                              <label
+                                htmlFor={`task-checkbox-${task.id}`}
+                                className={`block text-sm ${task.completed ? 'text-ink-muted' : 'text-ink'}`}
+                              >
+                                {task.description}
+                              </label>
+                              <p className="mt-1 text-xs text-ink-muted">{task.topic}</p>
+                            </div>
+                            {task.completed ? (
+                              <span className="w-fit shrink-0 rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
+                                Complete
+                              </span>
+                            ) : isToday(task.date) ? (
+                              <span className="w-fit shrink-0 rounded-xs border border-warning px-2 py-1 text-2xs font-semibold text-warning">
+                                Due today
+                              </span>
+                            ) : null}
                           </div>
-                          {task.completed ? (
-                            <span className="shrink-0 rounded-xs border border-success px-2 py-1 text-2xs font-semibold text-success">
-                              Complete
-                            </span>
-                          ) : isToday(task.date) ? (
-                            <span className="shrink-0 rounded-xs border border-warning px-2 py-1 text-2xs font-semibold text-warning">
-                              Due today
-                            </span>
-                          ) : null}
                         </li>
                       ))}
                     </ul>
