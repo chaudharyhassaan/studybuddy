@@ -1,3 +1,4 @@
+process.env.AI_PROVIDER = 'gemini';
 process.env.GEMINI_MODEL = 'test-primary';
 process.env.GEMINI_FALLBACK_MODEL = 'test-fallback';
 
