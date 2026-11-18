@@ -100,7 +100,7 @@ async function main() {
   };
 
   console.log('');
-  console.log('Generating a plan with Gemini. This can take up to a minute.');
+  console.log('Generating a plan with the configured AI provider. This can take up to a minute.');
   console.log('');
   console.log('This is the only AI-backed request in this script. Every later check reuses this plan.');
   console.log('');
@@ -235,7 +235,7 @@ async function main() {
   });
   report('0.25 hours returns 400', tooFewHours.status === 400, `status ${tooFewHours.status}`);
 
-  // Cascade check: these are inserted directly, so they cost no Gemini calls.
+  // Cascade check: these are inserted directly, so they cost no AI calls.
   const directQuiz = await Quiz.create({
     userId: userAId,
     planId: plan.id,

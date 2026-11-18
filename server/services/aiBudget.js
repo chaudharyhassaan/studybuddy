@@ -4,7 +4,7 @@ const { startOfUtcDay } = require('../utils/date');
 const PER_USER_DAILY_LIMIT = 10;
 const AI_LIMIT_MESSAGE = 'The daily AI limit has been reached. Try again tomorrow.';
 
-// The Gemini free quota is shared by the whole API key, so the cap is global.
+// The free quota is shared by the whole API key, so the cap is global.
 // Counters live in memory and reset at the start of each UTC day.
 function createAiBudget({ dailyLimit, perUserLimit = PER_USER_DAILY_LIMIT, now = () => new Date() }) {
   let windowStart = null;

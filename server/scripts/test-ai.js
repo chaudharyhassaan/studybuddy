@@ -73,7 +73,7 @@ async function register(body) {
 
 async function main() {
   console.log(`Testing AI quiz and flashcard routes against ${BASE_URL}`);
-  console.log('This run makes exactly two Gemini requests: one quiz and one flashcard deck.');
+  console.log('This run makes exactly two AI requests: one quiz and one flashcard deck.');
   console.log('The test plan is inserted directly into MongoDB, so no schedule is generated.');
   console.log('');
 
@@ -117,7 +117,7 @@ async function main() {
   const flashcardBody = { planId, topic: 'Photosynthesis', count: 5 };
 
   console.log('');
-  console.log('Rejected requests (these must not reach Gemini).');
+  console.log('Rejected requests (these must not reach the AI provider).');
 
   const anonymousQuiz = await call('/api/ai/quiz', { method: 'POST', body: quizBody });
   report('quiz without a token returns 401', anonymousQuiz.status === 401, `status ${anonymousQuiz.status}`);
@@ -231,7 +231,7 @@ async function main() {
   );
 
   console.log('');
-  console.log('Gemini request 1 of 2: one quiz.');
+  console.log('AI request 1 of 2: one quiz.');
   console.log('');
 
   const quiz = await call('/api/ai/quiz', { method: 'POST', body: quizBody, token: tokenA });
@@ -257,7 +257,7 @@ async function main() {
   }
 
   console.log('');
-  console.log('Gemini request 2 of 2: one flashcard deck.');
+  console.log('AI request 2 of 2: one flashcard deck.');
   console.log('');
 
   const cards = await call('/api/ai/flashcards', {
