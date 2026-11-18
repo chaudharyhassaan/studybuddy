@@ -54,10 +54,10 @@ export default function Terms() {
             Study content generated for you
           </h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
-            Schedules, quizzes and flashcards are produced by Google Gemini from the details you
-            enter. AI output can be incomplete or wrong. Check it against your course material
-            before you rely on it. You remain responsible for what you study and for decisions you
-            make from the content.
+            Schedules, quizzes and flashcards are produced by Groq from the details you enter. If
+            Groq is unavailable, Google Gemini is used instead. AI output can be incomplete or
+            wrong. Check it against your course material before you rely on it. You remain
+            responsible for what you study and for decisions you make from the content.
           </p>
         </section>
 

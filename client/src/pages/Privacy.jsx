@@ -54,10 +54,12 @@ export default function Privacy() {
             Third-party AI processing
           </h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
-            Plan generation uses Google Gemini. When you generate a plan, the subject, topics, exam
-            date, hours per day and start date are sent to Google Gemini. Generating a quiz or a
-            flashcard deck sends the topic and the number of questions or cards. Your name, email
-            address and password are not sent. Generated text is validated before it is stored.
+            Schedule, quiz and flashcard generation uses Groq. When you generate a plan, the
+            subject, topics, exam date, hours per day and start date are sent to Groq. Generating a
+            quiz or a flashcard deck sends the topic and the number of questions or cards. If Groq
+            is rate limited, unresponsive or slow to answer, the same text is sent to Google Gemini
+            as a backup provider. Your name, email address and password are never sent to either
+            provider. Generated text is validated before it is stored.
           </p>
         </section>
 

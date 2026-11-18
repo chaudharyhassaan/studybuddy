@@ -9,7 +9,7 @@ StudyBuddy Planner is a solo student hackathon project for the STEM2Connect AI H
 The product works in one loop:
 
 1. A student enters a subject, its topics, the exam date and how many hours per day they can study.
-2. The backend asks Gemini to generate a day-by-day study schedule, quizzes and flashcards.
+2. The backend asks Groq to generate a day-by-day study schedule, quizzes and flashcards. Google Gemini is the backup provider.
 3. The student works through the plan and tracks task completion, progress and a daily streak.
 
 Scope stays small. No admin area, no payments, no social features, no chat.
@@ -32,9 +32,12 @@ Monorepo with two apps.
 
 ### AI integration
 
-- Provider: Google Gemini API, free tier.
-- Called from the backend only. The browser never holds an AI key and never calls Gemini.
-- All provider code lives in `server/services/ai.js`: client setup, prompt construction and response parsing. No other file imports the Gemini SDK. Swapping providers means editing that one file.
+- Main provider: Groq API, OpenAI-compatible chat completions. Backup provider: Google Gemini API.
+- `AI_PROVIDER` picks the main provider (`groq` or `gemini`, `groq` by default). The other configured provider is tried once as a backup after a rate limit, a service error or a timeout.
+- Called from the backend only. The browser never holds an AI key and never calls a provider.
+- All provider code lives in `server/services/ai.js`: client setup, prompt construction and response parsing. No other file imports a provider SDK. Swapping providers means editing that one file.
+- Only the key of the provider in use is required. `GEMINI_API_KEY` stays optional and enables the backup.
+- Keep requests small: one provider request at a time, and a low output cap per generator, so a run stays inside Groq's 8K tokens per minute free tier.
 - Treat AI output as untrusted input. Validate it with zod on the server before storing it or returning it.
 
 ### Repository layout (target)
@@ -55,7 +58,7 @@ Keep server concerns separated: routes, controllers, models, middleware, validat
 - Secrets live in `.env`. `.env` is in `.gitignore` from the first commit. Never commit real keys.
 - Commit `.env.example` files that list variable names only, no values.
 - The server validates required environment variables at startup and fails loudly with a clear message and a non-zero exit when any are missing or empty.
-- Expected server variables: `NODE_ENV`, `PORT`, `MONGODB_URI`, `JWT_SECRET`, `GEMINI_API_KEY`, `CLIENT_URL`.
+- Expected server variables: `NODE_ENV`, `PORT`, `MONGODB_URI`, `JWT_SECRET`, `AI_PROVIDER`, `GROQ_API_KEY`, `GROQ_MODEL`, `CLIENT_URL`. Optional: `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`, `AI_DAILY_LIMIT`.
 - Debug output is off in production. No stack traces or internal details in responses sent to the client.
 
 ## Security rules
