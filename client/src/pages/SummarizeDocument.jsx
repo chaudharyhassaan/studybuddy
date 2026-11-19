@@ -207,7 +207,7 @@ export default function SummarizeDocument() {
   }
 
   return (
-    <div className="max-w-form">
+    <div className="mx-auto max-w-form">
       <p className="eyebrow">Documents</p>
       <h1 className="mt-3 font-display text-h1 font-semibold text-ink">Summarize a document</h1>
       <p className="mt-2 text-sm text-ink-muted">

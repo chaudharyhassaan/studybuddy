@@ -46,7 +46,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="max-w-form">
+    <div className="mx-auto max-w-form">
       <p className="eyebrow">Settings</p>
       <h1 className="mt-3 font-display text-h1 font-semibold text-ink">Settings</h1>
       <p className="mt-2 text-sm text-ink-muted">
