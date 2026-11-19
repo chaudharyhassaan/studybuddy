@@ -1,8 +1,8 @@
-# StudyBuddy Planner
+# StudyBuddy
 
-StudyBuddy Planner turns a subject, its topics, an exam date and a daily study budget into a day by day plan, with quizzes and flashcards for each topic. You work through the plan, tick off tasks, and the app shows completed tasks, overall progress and a daily streak.
+StudyBuddy turns a subject, its topics, an exam date and a daily study budget into a day by day plan, with quizzes and flashcards for each topic. You work through the plan, tick off tasks, and the app shows completed tasks, overall progress and a daily streak.
 
-![StudyBuddy Planner landing page](docs/screenshot.png)
+![StudyBuddy landing page](docs/screenshot.png)
 
 ## The problem it solves
 
@@ -18,14 +18,15 @@ StudyBuddy closes that gap. You enter the exam date and the hours you can actual
 - Task completion with progress and streak tracking.
 - A five question multiple choice quiz per topic.
 - An eight card flashcard deck per topic.
-- Saved plans, saved practice material and account deletion.
+- Document summaries from a PDF, DOCX, PPTX, TXT, MD or CSV file, or from a PNG, JPG or WEBP image, with a prompt that sets the format.
+- Saved plans, saved practice material, a change of name, and account deletion with password confirmation.
 
 ## Tech stack
 
 | Layer | Tools |
 | --- | --- |
 | Client | React 19, Vite, React Router, Axios, Tailwind CSS, Recharts, Phosphor Icons |
-| API | Node.js 20+, Express 5, Mongoose, helmet, express-rate-limit, zod, morgan |
+| API | Node.js 20+, Express 5, Mongoose, helmet, express-rate-limit, zod, morgan, multer, fflate, unpdf |
 | Auth | bcrypt password hashing, jsonwebtoken |
 | Database | MongoDB Atlas |
 | AI | Groq as the main provider, Google Gemini as the backup |
@@ -120,6 +121,7 @@ All routes are under `/api`. Routes marked Auth need an `Authorization: Bearer <
 | POST | `/api/auth/register` | Create an account and return a token | No |
 | POST | `/api/auth/login` | Sign in and return a token | No |
 | GET | `/api/auth/me` | Return the signed in user | Yes |
+| PATCH | `/api/auth/me` | Change the signed in user's name | Yes |
 | DELETE | `/api/auth/me` | Delete the account and its data | Yes |
 | GET | `/api/plans` | List the user's plans | Yes |
 | POST | `/api/plans` | Generate a plan and its schedule | Yes |
@@ -131,12 +133,15 @@ All routes are under `/api`. Routes marked Auth need an `Authorization: Bearer <
 | GET | `/api/ai/quiz` | List saved quizzes for a plan | Yes |
 | POST | `/api/ai/flashcards` | Generate a flashcard deck for a plan topic | Yes |
 | GET | `/api/ai/flashcards` | List saved decks for a plan | Yes |
+| POST | `/api/documents/summarize` | Summarize one uploaded document | Yes |
 
-Errors return a JSON body with an `error.message` string. Auth, plan and AI routes have stricter rate limits than the general API.
+Errors return a JSON body with an `error.message` string. Auth, plan and AI routes have stricter rate limits than the general API. Changing a name and deleting an account both require the current password. Deleting an account also requires the typed word `DELETE`, and removes the user's plans, tasks, quizzes and flashcards before the user record.
 
 ## AI usage
 
 Groq powers schedule, quiz and flashcard generation. The API sends the generation request to Groq first. If Groq is rate limited, returns a service error or times out, the request is retried once, then sent to Google Gemini as the backup provider, but only when `GEMINI_API_KEY` is set.
+
+Document summaries use the same provider order for text. Images and scanned PDFs without a text layer go to Gemini directly, because those files need a multimodal model. When `GEMINI_API_KEY` is not set, the page says that images and scanned PDFs cannot be summarized right now.
 
 `AI_PROVIDER` chooses the main provider, `groq` by default. `GROQ_MODEL` defaults to `openai/gpt-oss-120b`. Setting `AI_PROVIDER=gemini` swaps the order. Only the key of the provider in use is required, and the server refuses to start when none is configured.
 
@@ -145,6 +150,7 @@ What is sent to the provider:
 - Plan generation: the subject, the topics, the exam date, the hours per day and the start date.
 - Quiz generation: the topic and the number of questions.
 - Flashcard generation: the topic and the number of cards.
+- Document summaries: the summary prompt and the extracted text, capped at 16,000 characters, or the image or scanned PDF itself. Uploaded files stay in memory for the request and are not stored. One file per request, up to 10 MB, with a 60 page limit for PDFs.
 
 What is never sent: the user's name, email address, password, token or any other account data. The browser never holds an AI key. It calls this API, and the API calls the provider. All provider code lives in `server/services/ai.js`.
 

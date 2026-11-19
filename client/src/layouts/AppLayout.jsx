@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { GearSix, List, PlusSquare, SignOut, SquaresFour } from '@phosphor-icons/react';
+import { GearSix, FileText, List, PlusSquare, SignOut, SquaresFour } from '@phosphor-icons/react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 import { secondaryButtonClass } from '../components/PrimaryButton';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: SquaresFour },
-  { to: '/plans/new', label: 'Create plan', icon: PlusSquare },
+  { to: '/plans/new', label: 'Create Plan', icon: PlusSquare },
+  { to: '/documents/summarize', label: 'Summarize Document', icon: FileText },
   { to: '/settings', label: 'Settings', icon: GearSix },
 ];
 
@@ -22,11 +24,15 @@ const navLinkClass = ({ isActive }) =>
 
 function headerTitle(pathname) {
   if (pathname === '/plans/new') {
-    return 'Create plan';
+    return 'Create Plan';
   }
 
   if (pathname === '/settings') {
     return 'Settings';
+  }
+
+  if (pathname === '/documents/summarize') {
+    return 'Summarize Document';
   }
 
   if (pathname.startsWith('/plans/')) {
@@ -36,18 +42,16 @@ function headerTitle(pathname) {
   return 'Dashboard';
 }
 
-function initials(name) {
-  return name?.trim()?.charAt(0)?.toUpperCase() || 'S';
-}
-
 export default function AppLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const pageTitle = headerTitle(pathname);
 
   function handleLogout() {
+    setLogoutOpen(false);
     logout();
     navigate('/login', { replace: true });
   }
@@ -68,21 +72,13 @@ export default function AppLayout() {
             ))}
           </nav>
           <div className="border-t border-border p-4">
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border bg-accent-soft font-display text-sm font-semibold text-accent"
-              >
-                {initials(user?.name)}
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
-                <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
-              </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
+              <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
             </div>
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => setLogoutOpen(true)}
               className={`${secondaryButtonClass} mt-4 w-full`}
             >
               <SignOut size={16} aria-hidden="true" className="mr-2" />
@@ -97,7 +93,7 @@ export default function AppLayout() {
               <Wordmark size="sm" className="md:hidden" />
               <div className="hidden min-w-0 md:block">
                 <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
-                  StudyBuddy Planner
+                  StudyBuddy
                 </p>
                 <p className="truncate font-display text-h3 font-semibold text-ink">{pageTitle}</p>
               </div>
@@ -138,21 +134,13 @@ export default function AppLayout() {
                 ))}
               </nav>
               <div className="mt-4 border-t border-border pt-4">
-                <div className="flex items-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border bg-accent-soft font-display text-sm font-semibold text-accent"
-                  >
-                    {initials(user?.name)}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
-                    <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
-                  </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
+                  <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
                 </div>
                 <button
                   type="button"
-                  onClick={handleLogout}
+                  onClick={() => setLogoutOpen(true)}
                   className={`${secondaryButtonClass} mt-4 w-full`}
                 >
                   <SignOut size={16} aria-hidden="true" className="mr-2" />
@@ -172,6 +160,16 @@ export default function AppLayout() {
         </div>
       </div>
       <Footer />
+
+      <ConfirmDialog
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={handleLogout}
+        eyebrow="Log out"
+        title="Log out?"
+        description="You will need to sign in again to reach your plans and settings."
+        confirmLabel="Log out"
+      />
     </div>
   );
 }

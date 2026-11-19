@@ -21,6 +21,16 @@ function invalidCredentials(res) {
   });
 }
 
+// A failed password check on an authenticated account route is a bad request,
+// not an expired session, so the client keeps the user signed in.
+function invalidPassword(res) {
+  return res.status(400).json({
+    error: {
+      message: 'Email or password is incorrect.',
+    },
+  });
+}
+
 async function register(req, res, next) {
   try {
     const { name, email, password } = req.body;
@@ -79,8 +89,45 @@ function me(req, res) {
   return res.json({ user: req.user.toPublicJSON() });
 }
 
+async function changeName(req, res, next) {
+  try {
+    const { name, password } = req.body;
+    const user = await User.findById(req.user._id).select('+passwordHash');
+
+    if (!user) {
+      return invalidCredentials(res);
+    }
+
+    const matches = await bcrypt.compare(password, user.passwordHash);
+
+    if (!matches) {
+      return invalidPassword(res);
+    }
+
+    user.name = name;
+    await user.save();
+
+    return res.json({ user: user.toPublicJSON() });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 async function deleteAccount(req, res, next) {
   try {
+    const { password } = req.body;
+    const user = await User.findById(req.user._id).select('+passwordHash');
+
+    if (!user) {
+      return invalidCredentials(res);
+    }
+
+    const matches = await bcrypt.compare(password, user.passwordHash);
+
+    if (!matches) {
+      return invalidPassword(res);
+    }
+
     await deleteAccountData(req.user._id);
     return res.status(204).send();
   } catch (error) {
@@ -88,4 +135,4 @@ async function deleteAccount(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, deleteAccount };
+module.exports = { register, login, me, changeName, deleteAccount };

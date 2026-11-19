@@ -1,6 +1,6 @@
-# StudyBuddy Planner client
+# StudyBuddy client
 
-React and Vite client for StudyBuddy Planner. Product rules and the design system live in the root `AGENTS.md` and `docs/DESIGN.md`.
+React and Vite client for StudyBuddy. Product rules and the design system live in the root `AGENTS.md` and `docs/DESIGN.md`.
 
 ## Setup
 
@@ -24,6 +24,9 @@ The client calls `${VITE_API_URL}/api`. If `VITE_API_URL` is unset it falls back
 
 - `/login` and `/register` for the auth flow.
 - `/dashboard` when signed in.
+- `/plans/new` and `/plans/:id` for creating and working through a plan.
+- `/documents/summarize` for document summaries.
+- `/settings` for the account.
 - `/terms` and `/privacy` for the legal pages.
 - Every other path shows the 404 page.
 

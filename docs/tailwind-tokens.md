@@ -479,7 +479,7 @@ Notes for v3:
 - `text-xl`, `text-2xl`, `shadow-sm`, `shadow-md`, `transition-all`, `animate-spin` and `bg-gradient-*` no longer exist. Use the tokens.
 - `border` alone resolves to the `border` color. `border-border-strong` is the control boundary.
 - `ring-*` still renders a box shadow. Use `outline-*` for focus.
-- `rounded-full` exists for status dots and avatars only.
+- `rounded-full` exists for status dots only.
 - The quiz option recipe uses `has-[:checked]`, which needs Tailwind 3.4 or newer.
 - Use `focus-visible` utilities, not `focus`, so pointer clicks do not draw outlines.
 

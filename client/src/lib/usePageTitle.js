@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const SITE_NAME = 'StudyBuddy Planner';
+const SITE_NAME = 'StudyBuddy';
 
 export function usePageTitle(title) {
   useEffect(() => {

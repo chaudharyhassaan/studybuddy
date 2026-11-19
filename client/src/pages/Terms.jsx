@@ -24,7 +24,7 @@ export default function Terms() {
         <section className={`${sectionClass} first:border-t-0 first:pt-0`}>
           <h2 className="font-display text-h3 font-semibold text-ink">What this service is</h2>
           <p className="mt-2 text-base leading-relaxed text-ink">
-            StudyBuddy Planner turns a subject, its topics, an exam date and the hours you can study
+            StudyBuddy turns a subject, its topics, an exam date and the hours you can study
             each day into a day-by-day schedule. It also makes quizzes and flashcards for those
             topics. It is a free project built for the STEM2Connect AI Hackathon, Education track.
           </p>

@@ -1,9 +1,20 @@
 const { Router } = require('express');
-const { register, login, me, deleteAccount } = require('../controllers/auth.controller');
+const {
+  register,
+  login,
+  me,
+  changeName,
+  deleteAccount,
+} = require('../controllers/auth.controller');
 const { requireAuth } = require('../middleware/auth');
 const { authLimiter } = require('../middleware/rateLimiter');
 const { validate } = require('../middleware/validate');
-const { registerSchema, loginSchema } = require('../validators/auth.validator');
+const {
+  registerSchema,
+  loginSchema,
+  changeNameSchema,
+  deleteAccountSchema,
+} = require('../validators/auth.validator');
 
 const router = Router();
 
@@ -12,6 +23,7 @@ const router = Router();
 router.post('/register', authLimiter, validate(registerSchema), register);
 router.post('/login', authLimiter, validate(loginSchema), login);
 router.get('/me', requireAuth, me);
-router.delete('/me', requireAuth, deleteAccount);
+router.patch('/me', requireAuth, authLimiter, validate(changeNameSchema), changeName);
+router.delete('/me', requireAuth, authLimiter, validate(deleteAccountSchema), deleteAccount);
 
 module.exports = router;

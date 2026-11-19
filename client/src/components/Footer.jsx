@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="max-w-sm">
             <Wordmark size="sm" />
             <p className="mt-4 text-sm text-ink-muted">
-              A study planner for the weeks before an exam.
+              A study schedule for the weeks before an exam.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-9 flex flex-col gap-2 border-t border-border pt-5 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {currentYear} StudyBuddy Planner</p>
+          <p>&copy; {currentYear} StudyBuddy</p>
           <p>Plans, tasks and study tools stay on your account.</p>
         </div>
       </div>
