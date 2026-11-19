@@ -5,10 +5,6 @@ import { useAuth } from '../context/useAuth';
 import { destructiveButtonClass, secondaryButtonClass } from '../components/PrimaryButton';
 import { usePageTitle } from '../lib/usePageTitle';
 
-function initials(name) {
-  return name?.trim()?.charAt(0)?.toUpperCase() || 'S';
-}
-
 export default function Settings() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -54,20 +50,12 @@ export default function Settings() {
       </p>
 
       <section aria-labelledby="account-heading" className="mt-8">
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-border bg-accent-soft font-display text-h3 font-semibold text-accent"
-          >
-            {initials(user?.name)}
-          </span>
-          <h2
-            id="account-heading"
-            className="font-display text-h2 font-semibold text-ink"
-          >
-            Account
-          </h2>
-        </div>
+        <h2
+          id="account-heading"
+          className="font-display text-h2 font-semibold text-ink"
+        >
+          Account
+        </h2>
 
         <dl className="mt-4 overflow-hidden rounded-lg border border-border bg-surface">
           <div className="flex flex-col gap-1 border-t border-border px-5 py-4 first:border-t-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">

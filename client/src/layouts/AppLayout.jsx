@@ -41,10 +41,6 @@ function headerTitle(pathname) {
   return 'Dashboard';
 }
 
-function initials(name) {
-  return name?.trim()?.charAt(0)?.toUpperCase() || 'S';
-}
-
 export default function AppLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -73,17 +69,9 @@ export default function AppLayout() {
             ))}
           </nav>
           <div className="border-t border-border p-4">
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border bg-accent-soft font-display text-sm font-semibold text-accent"
-              >
-                {initials(user?.name)}
-              </span>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
-                <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
-              </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
+              <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
             </div>
             <button
               type="button"
@@ -143,17 +131,9 @@ export default function AppLayout() {
                 ))}
               </nav>
               <div className="mt-4 border-t border-border pt-4">
-                <div className="flex items-center gap-3">
-                  <span
-                    aria-hidden="true"
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm border border-border bg-accent-soft font-display text-sm font-semibold text-accent"
-                  >
-                    {initials(user?.name)}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
-                    <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
-                  </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-ink">{user?.name}</p>
+                  <p className="mt-0.5 truncate text-xs text-ink-muted">{user?.email}</p>
                 </div>
                 <button
                   type="button"
