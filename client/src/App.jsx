@@ -16,6 +16,7 @@ import Terms from './pages/Terms';
 
 const CreatePlan = lazy(() => import('./pages/CreatePlan'));
 const PlanDetail = lazy(() => import('./pages/PlanDetail'));
+const SummarizeDocument = lazy(() => import('./pages/SummarizeDocument'));
 
 function PageFallback() {
   return (
@@ -61,6 +62,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageFallback />}>
                 <PlanDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/documents/summarize"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <SummarizeDocument />
               </Suspense>
             }
           />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GearSix, List, PlusSquare, SignOut, SquaresFour } from '@phosphor-icons/react';
+import { GearSix, FileText, List, PlusSquare, SignOut, SquaresFour } from '@phosphor-icons/react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
@@ -11,6 +11,7 @@ const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: SquaresFour },
   { to: '/plans/new', label: 'Create plan', icon: PlusSquare },
   { to: '/settings', label: 'Settings', icon: GearSix },
+  { to: '/documents/summarize', label: 'Summarize document', icon: FileText },
 ];
 
 const navLinkClass = ({ isActive }) =>
@@ -27,6 +28,10 @@ function headerTitle(pathname) {
 
   if (pathname === '/settings') {
     return 'Settings';
+  }
+
+  if (pathname === '/documents/summarize') {
+    return 'Summarize document';
   }
 
   if (pathname.startsWith('/plans/')) {
