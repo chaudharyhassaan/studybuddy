@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth.routes');
 const planRoutes = require('./routes/plan.routes');
 const taskRoutes = require('./routes/task.routes');
 const aiRoutes = require('./routes/ai.routes');
+const documentRoutes = require('./routes/document.routes');
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/plans', planRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/documents', documentRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
