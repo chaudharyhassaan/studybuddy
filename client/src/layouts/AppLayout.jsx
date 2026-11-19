@@ -9,9 +9,9 @@ import { secondaryButtonClass } from '../components/PrimaryButton';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: SquaresFour },
-  { to: '/plans/new', label: 'Create plan', icon: PlusSquare },
+  { to: '/plans/new', label: 'Create Plan', icon: PlusSquare },
+  { to: '/documents/summarize', label: 'Summarize Document', icon: FileText },
   { to: '/settings', label: 'Settings', icon: GearSix },
-  { to: '/documents/summarize', label: 'Summarize document', icon: FileText },
 ];
 
 const navLinkClass = ({ isActive }) =>
@@ -23,7 +23,7 @@ const navLinkClass = ({ isActive }) =>
 
 function headerTitle(pathname) {
   if (pathname === '/plans/new') {
-    return 'Create plan';
+    return 'Create Plan';
   }
 
   if (pathname === '/settings') {
@@ -31,7 +31,7 @@ function headerTitle(pathname) {
   }
 
   if (pathname === '/documents/summarize') {
-    return 'Summarize document';
+    return 'Summarize Document';
   }
 
   if (pathname.startsWith('/plans/')) {
