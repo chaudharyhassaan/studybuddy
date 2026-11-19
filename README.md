@@ -149,7 +149,7 @@ What is sent to the provider:
 - Plan generation: the subject, the topics, the exam date, the hours per day and the start date.
 - Quiz generation: the topic and the number of questions.
 - Flashcard generation: the topic and the number of cards.
-- Document summaries: the summary prompt and the extracted text, capped at 16,000 characters, or the image or scanned PDF itself. Uploaded files stay in memory for the request and are not stored.
+- Document summaries: the summary prompt and the extracted text, capped at 16,000 characters, or the image or scanned PDF itself. Uploaded files stay in memory for the request and are not stored. One file per request, up to 10 MB, with a 60 page limit for PDFs.
 
 What is never sent: the user's name, email address, password, token or any other account data. The browser never holds an AI key. It calls this API, and the API calls the provider. All provider code lives in `server/services/ai.js`.
 

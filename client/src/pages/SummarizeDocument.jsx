@@ -235,7 +235,8 @@ export default function SummarizeDocument() {
               Drag a document here, or choose a file
             </p>
             <p className="mx-auto mt-1 max-w-sm text-xs text-ink-muted">
-              PDF, DOCX, PPTX, TXT, MD, CSV, PNG, JPG or WEBP. One file, up to 10 MB.
+              PDF, DOCX, PPTX, TXT, MD, CSV, PNG, JPG or WEBP. One file, up to 10 MB. PDFs up to 60
+              pages.
             </p>
             <button
               ref={chooseRef}
