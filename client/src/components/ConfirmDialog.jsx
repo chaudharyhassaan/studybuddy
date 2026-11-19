@@ -61,6 +61,14 @@ export default function ConfirmDialog({
     onClose();
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!busy && !confirmDisabled) {
+      onConfirm();
+    }
+  }
+
   return (
     <dialog
       ref={dialogRef}
@@ -71,44 +79,45 @@ export default function ConfirmDialog({
       onClose={handleClose}
       className="m-auto max-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-[480px] overflow-y-auto rounded-lg border border-border bg-surface p-6 text-ink"
     >
-      <p className="eyebrow">{eyebrow || title}</p>
-      <h2 id={titleId} className="mt-3 font-display text-h2 font-semibold text-ink">
-        {title}
-      </h2>
-      <p id={descriptionId} className="mt-2 text-sm text-ink-muted">
-        {description}
-      </p>
+      <form onSubmit={handleSubmit} noValidate>
+        <p className="eyebrow">{eyebrow || title}</p>
+        <h2 id={titleId} className="mt-3 font-display text-h2 font-semibold text-ink">
+          {title}
+        </h2>
+        <p id={descriptionId} className="mt-2 text-sm text-ink-muted">
+          {description}
+        </p>
 
-      {children}
+        {children}
 
-      {error ? (
-        <div
-          role="alert"
-          className="mt-4 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
-        >
-          {error}
+        {error ? (
+          <div
+            role="alert"
+            className="mt-4 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
+          >
+            {error}
+          </div>
+        ) : null}
+
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button
+            ref={cancelRef}
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className={secondaryButtonClass}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={busy || confirmDisabled}
+            className={destructive ? destructiveButtonClass : primaryButtonClass}
+          >
+            {busy ? busyLabel : confirmLabel}
+          </button>
         </div>
-      ) : null}
-
-      <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <button
-          ref={cancelRef}
-          type="button"
-          onClick={onClose}
-          disabled={busy}
-          className={secondaryButtonClass}
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={onConfirm}
-          disabled={busy || confirmDisabled}
-          className={destructive ? destructiveButtonClass : primaryButtonClass}
-        >
-          {busy ? busyLabel : confirmLabel}
-        </button>
-      </div>
+      </form>
     </dialog>
   );
 }

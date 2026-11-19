@@ -11,6 +11,7 @@ export default function TextField({
   placeholder,
   min,
   max,
+  maxLength,
   step,
   required = false,
 }) {
@@ -43,6 +44,7 @@ export default function TextField({
         placeholder={placeholder}
         min={min}
         max={max}
+        maxLength={maxLength}
         step={step}
         required={required}
         aria-invalid={error ? 'true' : undefined}

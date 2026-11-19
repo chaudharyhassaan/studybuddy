@@ -13,13 +13,20 @@ const passwordSchema = z
   .min(8, 'Password must be at least 8 characters.')
   .max(72, 'Password must be 72 characters or fewer.');
 
+const currentPasswordSchema = z
+  .string({ error: 'Enter your password.' })
+  .min(1, 'Enter your password.')
+  .max(72, 'Password must be 72 characters or fewer.');
+
+const nameSchema = z
+  .string({ error: 'Enter your name.' })
+  .trim()
+  .min(1, 'Enter your name.')
+  .max(80, 'Name must be 80 characters or fewer.');
+
 const registerSchema = z
   .object({
-    name: z
-      .string({ error: 'Enter your name.' })
-      .trim()
-      .min(1, 'Enter your name.')
-      .max(80, 'Name must be 80 characters or fewer.'),
+    name: nameSchema,
     email: emailSchema,
     password: passwordSchema,
   })
@@ -28,11 +35,15 @@ const registerSchema = z
 const loginSchema = z
   .object({
     email: emailSchema,
-    password: z
-      .string({ error: 'Enter your password.' })
-      .min(1, 'Enter your password.')
-      .max(72, 'Password must be 72 characters or fewer.'),
+    password: currentPasswordSchema,
   })
   .strict();
 
-module.exports = { registerSchema, loginSchema };
+const changeNameSchema = z
+  .object({
+    name: nameSchema,
+    password: currentPasswordSchema,
+  })
+  .strict();
+
+module.exports = { registerSchema, loginSchema, changeNameSchema };

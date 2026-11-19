@@ -3,17 +3,78 @@ import { useNavigate } from 'react-router-dom';
 import { api, getErrorMessage } from '../lib/api';
 import { useAuth } from '../context/useAuth';
 import { destructiveButtonClass, secondaryButtonClass } from '../components/PrimaryButton';
+import ConfirmDialog from '../components/ConfirmDialog';
+import TextField from '../components/TextField';
 import { usePageTitle } from '../lib/usePageTitle';
 
+function requestMessage(error, fallback) {
+  const fields = error?.response?.data?.error?.fields;
+  const fieldMessage =
+    fields && Object.values(fields).find((value) => typeof value === 'string' && value.trim());
+
+  return fieldMessage || getErrorMessage(error, fallback);
+}
+
 export default function Settings() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
   const dialogRef = useRef(null);
   const triggerRef = useRef(null);
   const [deleteError, setDeleteError] = useState('');
   const [deleting, setDeleting] = useState(false);
+  const [nameOpen, setNameOpen] = useState(false);
+  const [nameValue, setNameValue] = useState('');
+  const [namePassword, setNamePassword] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameNotice, setNameNotice] = useState('');
 
   usePageTitle('Settings');
+
+  function openNameDialog() {
+    setNameValue(user?.name || '');
+    setNamePassword('');
+    setNameError('');
+    setNameNotice('');
+    setNameOpen(true);
+  }
+
+  function closeNameDialog() {
+    if (!nameSaving) {
+      setNameOpen(false);
+      setNamePassword('');
+      setNameError('');
+    }
+  }
+
+  async function confirmName() {
+    const name = nameValue.trim();
+
+    if (!name) {
+      setNameError('Enter your name.');
+      return;
+    }
+
+    if (!namePassword) {
+      setNameError('Enter your password.');
+      return;
+    }
+
+    setNameSaving(true);
+    setNameError('');
+
+    try {
+      const { data } = await api.patch('/auth/me', { name, password: namePassword });
+      updateUser(data.user);
+      setNameOpen(false);
+      setNamePassword('');
+      setNameNotice('Your name was updated.');
+    } catch (error) {
+      setNameError(requestMessage(error, 'Could not change your name. Try again.'));
+    } finally {
+      setNameSaving(false);
+    }
+  }
 
   function openDialog() {
     setDeleteError('');
@@ -72,6 +133,67 @@ export default function Settings() {
           </div>
         </dl>
       </section>
+
+      <section aria-labelledby="change-name-heading" className="mt-10">
+        <h2
+          id="change-name-heading"
+          className="font-display text-h2 font-semibold text-ink"
+        >
+          Change name
+        </h2>
+        <div className="mt-4 rounded-lg border border-border bg-surface p-5">
+          <p className="text-sm text-ink-muted">
+            Update the name shown in the sidebar and header. Confirm the change with your current
+            password.
+          </p>
+          <button
+            type="button"
+            onClick={openNameDialog}
+            className={`${secondaryButtonClass} mt-4`}
+          >
+            Change name
+          </button>
+          {nameNotice ? (
+            <p role="status" className="mt-3 text-sm text-success">
+              {nameNotice}
+            </p>
+          ) : null}
+        </div>
+      </section>
+
+      <ConfirmDialog
+        open={nameOpen}
+        onClose={closeNameDialog}
+        onConfirm={confirmName}
+        eyebrow="Change name"
+        title="Change your name?"
+        description="Enter the name you want to use, then confirm with your current password."
+        confirmLabel="Change name"
+        busyLabel="Saving name"
+        busy={nameSaving}
+        error={nameError}
+      >
+        <div className="mt-5 space-y-4">
+          <TextField
+            id="account-name"
+            label="Name"
+            value={nameValue}
+            onChange={(event) => setNameValue(event.target.value)}
+            autoComplete="name"
+            maxLength={80}
+            required
+          />
+          <TextField
+            id="account-name-password"
+            label="Current password"
+            type="password"
+            value={namePassword}
+            onChange={(event) => setNamePassword(event.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </div>
+      </ConfirmDialog>
 
       <section aria-labelledby="delete-account-heading" className="mt-10">
         <h2
