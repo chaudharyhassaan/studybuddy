@@ -3,6 +3,7 @@ import { GearSix, FileText, List, PlusSquare, SignOut, SquaresFour } from '@phos
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import Footer from '../components/Footer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import PageTransition from '../components/PageTransition';
 import Wordmark from '../components/Wordmark';
 import { secondaryButtonClass } from '../components/PrimaryButton';
@@ -46,9 +47,11 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
   const pageTitle = headerTitle(pathname);
 
   function handleLogout() {
+    setLogoutOpen(false);
     logout();
     navigate('/login', { replace: true });
   }
@@ -75,7 +78,7 @@ export default function AppLayout() {
             </div>
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={() => setLogoutOpen(true)}
               className={`${secondaryButtonClass} mt-4 w-full`}
             >
               <SignOut size={16} aria-hidden="true" className="mr-2" />
@@ -137,7 +140,7 @@ export default function AppLayout() {
                 </div>
                 <button
                   type="button"
-                  onClick={handleLogout}
+                  onClick={() => setLogoutOpen(true)}
                   className={`${secondaryButtonClass} mt-4 w-full`}
                 >
                   <SignOut size={16} aria-hidden="true" className="mr-2" />
@@ -157,6 +160,16 @@ export default function AppLayout() {
         </div>
       </div>
       <Footer />
+
+      <ConfirmDialog
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={handleLogout}
+        eyebrow="Log out"
+        title="Log out?"
+        description="You will need to sign in again to reach your plans and settings."
+        confirmLabel="Log out"
+      />
     </div>
   );
 }

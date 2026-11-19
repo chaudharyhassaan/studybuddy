@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   Bar,
@@ -12,12 +12,11 @@ import {
 import { api, getErrorMessage } from '../lib/api';
 import { useAuth } from '../context/useAuth';
 import PrimaryButton, {
-  destructiveButtonClass,
   primaryButtonClass,
-  secondaryButtonClass,
   textLinkClass,
 } from '../components/PrimaryButton';
 import ProgressBar from '../components/ProgressBar';
+import ConfirmDialog from '../components/ConfirmDialog';
 import StudyTools from '../components/StudyTools';
 import { usePageTitle } from '../lib/usePageTitle';
 import {
@@ -98,8 +97,7 @@ export default function PlanDetail() {
   const [pendingTaskId, setPendingTaskId] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
-  const dialogRef = useRef(null);
-  const deleteTriggerRef = useRef(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   usePageTitle(loading ? 'Plan' : notFound ? 'Plan not found' : plan?.subject ?? 'Plan');
 
@@ -173,12 +171,11 @@ export default function PlanDetail() {
 
   function openDialog() {
     setDeleteError('');
-    dialogRef.current?.showModal();
+    setDeleteOpen(true);
   }
 
   function closeDialog() {
-    dialogRef.current?.close();
-    deleteTriggerRef.current?.focus();
+    setDeleteOpen(false);
   }
 
   async function confirmDelete() {
@@ -187,7 +184,7 @@ export default function PlanDetail() {
 
     try {
       await api.delete(`/plans/${plan.id}`);
-      dialogRef.current?.close();
+      setDeleteOpen(false);
       navigate('/dashboard', { replace: true });
     } catch (requestError) {
       setDeleteError(getErrorMessage(requestError, 'Could not delete this plan. Try again.'));
@@ -270,7 +267,6 @@ export default function PlanDetail() {
           </p>
         </div>
         <button
-          ref={deleteTriggerRef}
           type="button"
           onClick={openDialog}
           className="pressable inline-flex h-11 shrink-0 items-center self-start px-1 text-sm text-error underline decoration-border-strong underline-offset-2 hover:text-error-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
@@ -519,44 +515,19 @@ export default function PlanDetail() {
         </aside>
       </div>
 
-      <dialog
-        ref={dialogRef}
-        aria-labelledby="delete-plan-title"
-        aria-describedby="delete-plan-details"
-        className="m-auto max-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-[480px] overflow-y-auto rounded-lg border border-border bg-surface p-6 text-ink"
-      >
-        <p className="eyebrow">Delete plan</p>
-        <h2
-          id="delete-plan-title"
-          className="mt-3 font-display text-h2 font-semibold text-ink"
-        >
-          Delete this plan?
-        </h2>
-        <p id="delete-plan-details" className="mt-2 text-sm text-ink-muted">
-          The schedule, quizzes and flashcards will be removed.
-        </p>
-        {deleteError ? (
-          <div
-            role="alert"
-            className="mt-4 rounded-md border border-border border-l-2 border-l-error bg-sunken px-4 py-3 text-sm text-error"
-          >
-            {deleteError}
-          </div>
-        ) : null}
-        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <button type="button" onClick={closeDialog} className={secondaryButtonClass}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={confirmDelete}
-            disabled={deleting}
-            className={destructiveButtonClass}
-          >
-            {deleting ? 'Deleting plan' : 'Delete plan'}
-          </button>
-        </div>
-      </dialog>
+      <ConfirmDialog
+        open={deleteOpen}
+        onClose={closeDialog}
+        onConfirm={confirmDelete}
+        eyebrow="Delete plan"
+        title="Delete this plan?"
+        description="The schedule, quizzes and flashcards will be removed. This cannot be undone."
+        confirmLabel="Delete plan"
+        busyLabel="Deleting plan"
+        busy={deleting}
+        destructive
+        error={deleteError}
+      />
     </div>
   );
 }
