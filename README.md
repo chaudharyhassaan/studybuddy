@@ -18,6 +18,7 @@ StudyBuddy closes that gap. You enter the exam date and the hours you can actual
 - Task completion with progress and streak tracking.
 - A five question multiple choice quiz per topic.
 - An eight card flashcard deck per topic.
+- Document summaries from a PDF, DOCX, PPTX, TXT, MD or CSV file, or from a PNG, JPG or WEBP image, with a prompt that sets the format.
 - Saved plans, saved practice material and account deletion.
 
 ## Tech stack
@@ -25,7 +26,7 @@ StudyBuddy closes that gap. You enter the exam date and the hours you can actual
 | Layer | Tools |
 | --- | --- |
 | Client | React 19, Vite, React Router, Axios, Tailwind CSS, Recharts, Phosphor Icons |
-| API | Node.js 20+, Express 5, Mongoose, helmet, express-rate-limit, zod, morgan |
+| API | Node.js 20+, Express 5, Mongoose, helmet, express-rate-limit, zod, morgan, multer, fflate, unpdf |
 | Auth | bcrypt password hashing, jsonwebtoken |
 | Database | MongoDB Atlas |
 | AI | Groq as the main provider, Google Gemini as the backup |
@@ -131,12 +132,15 @@ All routes are under `/api`. Routes marked Auth need an `Authorization: Bearer <
 | GET | `/api/ai/quiz` | List saved quizzes for a plan | Yes |
 | POST | `/api/ai/flashcards` | Generate a flashcard deck for a plan topic | Yes |
 | GET | `/api/ai/flashcards` | List saved decks for a plan | Yes |
+| POST | `/api/documents/summarize` | Summarize one uploaded document | Yes |
 
 Errors return a JSON body with an `error.message` string. Auth, plan and AI routes have stricter rate limits than the general API.
 
 ## AI usage
 
 Groq powers schedule, quiz and flashcard generation. The API sends the generation request to Groq first. If Groq is rate limited, returns a service error or times out, the request is retried once, then sent to Google Gemini as the backup provider, but only when `GEMINI_API_KEY` is set.
+
+Document summaries use the same provider order for text. Images and scanned PDFs without a text layer go to Gemini directly, because those files need a multimodal model. When `GEMINI_API_KEY` is not set, the page says that images and scanned PDFs cannot be summarized right now.
 
 `AI_PROVIDER` chooses the main provider, `groq` by default. `GROQ_MODEL` defaults to `openai/gpt-oss-120b`. Setting `AI_PROVIDER=gemini` swaps the order. Only the key of the provider in use is required, and the server refuses to start when none is configured.
 
@@ -145,6 +149,7 @@ What is sent to the provider:
 - Plan generation: the subject, the topics, the exam date, the hours per day and the start date.
 - Quiz generation: the topic and the number of questions.
 - Flashcard generation: the topic and the number of cards.
+- Document summaries: the summary prompt and the extracted text, capped at 16,000 characters, or the image or scanned PDF itself. Uploaded files stay in memory for the request and are not stored.
 
 What is never sent: the user's name, email address, password, token or any other account data. The browser never holds an AI key. It calls this API, and the API calls the provider. All provider code lives in `server/services/ai.js`.
 
