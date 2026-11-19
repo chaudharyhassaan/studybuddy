@@ -223,7 +223,7 @@ export default function Settings() {
         </h2>
         <div className="mt-4 rounded-lg border border-border border-l-2 border-l-error bg-sunken p-5">
           <p className="text-sm text-ink-muted">
-            Deleting your account permanently deletes your account, plans, tasks, quizzes and
+            Deleting your account permanently removes it, along with your plans, tasks, quizzes and
             flashcards. This cannot be undone.
           </p>
           <button
