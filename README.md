@@ -19,7 +19,7 @@ StudyBuddy closes that gap. You enter the exam date and the hours you can actual
 - A five question multiple choice quiz per topic.
 - An eight card flashcard deck per topic.
 - Document summaries from a PDF, DOCX, PPTX, TXT, MD or CSV file, or from a PNG, JPG or WEBP image, with a prompt that sets the format.
-- Saved plans, saved practice material and account deletion.
+- Saved plans, saved practice material, a change of name, and account deletion with password confirmation.
 
 ## Tech stack
 
@@ -121,6 +121,7 @@ All routes are under `/api`. Routes marked Auth need an `Authorization: Bearer <
 | POST | `/api/auth/register` | Create an account and return a token | No |
 | POST | `/api/auth/login` | Sign in and return a token | No |
 | GET | `/api/auth/me` | Return the signed in user | Yes |
+| PATCH | `/api/auth/me` | Change the signed in user's name | Yes |
 | DELETE | `/api/auth/me` | Delete the account and its data | Yes |
 | GET | `/api/plans` | List the user's plans | Yes |
 | POST | `/api/plans` | Generate a plan and its schedule | Yes |
@@ -134,7 +135,7 @@ All routes are under `/api`. Routes marked Auth need an `Authorization: Bearer <
 | GET | `/api/ai/flashcards` | List saved decks for a plan | Yes |
 | POST | `/api/documents/summarize` | Summarize one uploaded document | Yes |
 
-Errors return a JSON body with an `error.message` string. Auth, plan and AI routes have stricter rate limits than the general API.
+Errors return a JSON body with an `error.message` string. Auth, plan and AI routes have stricter rate limits than the general API. Changing a name and deleting an account both require the current password. Deleting an account also requires the typed word `DELETE`, and removes the user's plans, tasks, quizzes and flashcards before the user record.
 
 ## AI usage
 

@@ -44,7 +44,7 @@ All values are exact. No pure white and no pure black appear anywhere.
 | `accent` | `#8F4529` | Primary buttons, links, active tab, focus outline |
 | `accent-hover` | `#7A3920` | Hover for accent buttons and accent text |
 | `accent-pressed` | `#6B3119` | Pressed primary button |
-| `accent-soft` | `#F1E3D5` | Selected row, avatar fill, quiet accent block |
+| `accent-soft` | `#F1E3D5` | Selected row, quiet accent block |
 | `accent-wash` | `#F7EDE3` | Quiet accent surface: selected nav, countdown, streak, correct option |
 | `on-accent` | `#FBF8F0` | Text and icons on accent fills |
 | `success` | `#2F6B45` | Completed, correct, on track |
@@ -57,7 +57,7 @@ Usage balance: roughly 70 percent paper, 20 percent surface and sunken, 7 percen
 Rules:
 
 - Accent fills are limited to primary buttons, selected options, small state marks and the active tab rule. Never a full section background.
-- `accent-soft` is an avatar fill and a quiet selected state. `accent-wash` is the larger quiet accent surface for the streak stat, countdown card, selected navigation and a correct quiz option. Both stay secondary to the paper and surface layers.
+- `accent-soft` is a quiet selected state. `accent-wash` is the larger quiet accent surface for the streak stat, countdown card, selected navigation and a correct quiz option. Both stay secondary to the paper and surface layers.
 - `sunken-deep` is a pressed state for secondary and quiet controls. It is not a text surface: `ink-muted` on it is 4.27:1, below AA for normal text.
 - No gradients, no color mixing, no opacity tricks for color variants. Use the tokens.
 - `border` is decorative separation. Never use it as the only boundary of a form control. Inputs use `border-strong`.
@@ -182,7 +182,7 @@ Breakpoints: 360px, 768px, 1024px, 1280px, 1440px. Page gutters: 16px, 24px, 40p
 | `rounded-md` | 6px | Cards, panels, dropdowns, modals, toasts |
 | `rounded-lg` | 8px | Product preview frame and large framed media only |
 | `rounded-none` | 0 | Table rows, dividers, full-width strips |
-| `rounded-full` | 9999px | Status dots and avatars only. Never buttons or containers. |
+| `rounded-full` | 9999px | Status dots only. Never buttons or containers. |
 
 ### Borders and depth
 
@@ -383,7 +383,7 @@ States: inline errors, error summary, disabled submit while pending, generic fai
 
 ### Dashboard (`/dashboard`)
 
-Layout: app shell. Sidebar: wordmark, nav (Dashboard, Create plan, Settings), user block at the bottom with avatar, name, email and "Log out". Top bar: page name above the shell label on desktop, mobile wordmark and menu on small screens. Content: 1120px maximum width, 32px padding.
+Layout: app shell. Sidebar: wordmark, nav (Dashboard, Create Plan, Summarize Document, Settings), user block at the bottom with name, email and "Log out". Top bar: page name above the shell label on desktop, mobile wordmark and menu on small screens. Content: 1120px maximum width, 32px padding.
 
 Header row: H1 "Your study", today's date in 13px muted text, primary "Create plan".
 
