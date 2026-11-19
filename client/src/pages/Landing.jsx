@@ -50,7 +50,7 @@ export default function Landing() {
       <section aria-labelledby="hero-heading" className="border-b border-border">
         <div className="mx-auto grid max-w-content gap-12 px-4 py-14 md:px-6 md:py-20 lg:grid-cols-12 lg:items-start lg:gap-10 lg:px-10 lg:py-24">
           <div className="min-w-0 lg:col-span-6 lg:pr-4">
-            <p className="eyebrow">Study planner</p>
+            <p className="eyebrow">Study schedule</p>
             <h1
               id="hero-heading"
               className="mt-5 font-display text-display font-semibold text-ink"

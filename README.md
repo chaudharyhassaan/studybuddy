@@ -1,8 +1,8 @@
-# StudyBuddy Planner
+# StudyBuddy
 
-StudyBuddy Planner turns a subject, its topics, an exam date and a daily study budget into a day by day plan, with quizzes and flashcards for each topic. You work through the plan, tick off tasks, and the app shows completed tasks, overall progress and a daily streak.
+StudyBuddy turns a subject, its topics, an exam date and a daily study budget into a day by day plan, with quizzes and flashcards for each topic. You work through the plan, tick off tasks, and the app shows completed tasks, overall progress and a daily streak.
 
-![StudyBuddy Planner landing page](docs/screenshot.png)
+![StudyBuddy landing page](docs/screenshot.png)
 
 ## The problem it solves
 

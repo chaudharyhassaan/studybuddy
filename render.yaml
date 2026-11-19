@@ -1,4 +1,4 @@
-# Render Blueprint for the StudyBuddy Planner API.
+# Render Blueprint for the StudyBuddy API.
 # The client is deployed separately on Vercel and the database lives in MongoDB Atlas.
 # Secrets marked with sync: false are entered in the Render dashboard, never committed.
 services:

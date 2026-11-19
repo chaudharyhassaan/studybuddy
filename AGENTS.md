@@ -1,10 +1,10 @@
 # AGENTS.md
 
-Permanent rulebook for StudyBuddy Planner. Read this before every task and follow it in all code, copy and design decisions. If a request conflicts with a rule here, say so before changing code.
+Permanent rulebook for StudyBuddy. Read this before every task and follow it in all code, copy and design decisions. If a request conflicts with a rule here, say so before changing code.
 
 ## Project
 
-StudyBuddy Planner is a solo student hackathon project for the STEM2Connect AI Hackathon, Education track.
+StudyBuddy is a solo student hackathon project for the STEM2Connect AI Hackathon, Education track.
 
 The product works in one loop:
 

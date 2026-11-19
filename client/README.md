@@ -1,6 +1,6 @@
-# StudyBuddy Planner client
+# StudyBuddy client
 
-React and Vite client for StudyBuddy Planner. Product rules and the design system live in the root `AGENTS.md` and `docs/DESIGN.md`.
+React and Vite client for StudyBuddy. Product rules and the design system live in the root `AGENTS.md` and `docs/DESIGN.md`.
 
 ## Setup
 

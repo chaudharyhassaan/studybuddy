@@ -1,4 +1,4 @@
-# StudyBuddy Planner Design System
+# StudyBuddy Design System
 
 Status: draft 2, updated for the shipped tokens, brand mark and motion.
 Scope: light theme only, web, students aged 13 and up.
@@ -8,7 +8,7 @@ Related: `AGENTS.md` (rules), `docs/tailwind-tokens.md` (tokens to paste into th
 
 ### Paper and ink
 
-StudyBuddy Planner should feel like a clear desk the night before an exam. Paper-toned surfaces, dark ink, one clay accent, thin rules instead of shadows, and type that carries the hierarchy.
+StudyBuddy should feel like a clear desk the night before an exam. Paper-toned surfaces, dark ink, one clay accent, thin rules instead of shadows, and type that carries the hierarchy.
 
 Mood: calm, prepared, plainspoken.
 Personality: the organized classmate who already made a plan and is willing to share it. Direct, steady, quietly encouraging. Never a mascot, never a hype coach, never a productivity influencer.
@@ -315,7 +315,7 @@ If Recharts appears on the dashboard: flat presentation only. No gradients, no s
 
 Mark: a stacked-pages symbol. Two 16x20 rounded rectangles, the back one in `accent` outline and the front one filled, with three `on-accent` rule lines on the front page. The front page sits lower-left and the back page peeks out at the top-right, so the mark reads as a plan with more pages behind it. It is drawn at `32x32` and used at 28px in headers and 32px at the base size. The mark is decorative (`aria-hidden`) unless a `title` is passed, in which case it exposes an accessible name.
 
-Wordmark: the mark plus a two-line lockup. Line one is "StudyBuddy" in Fraunces 600 at 20px, `ink`, tracking -0.01em. Line two is "Planner" at 11px, 600, uppercase, 0.16em tracking, `ink-muted`. The whole lockup is one link to the home route with an `aria-label` of "StudyBuddy Planner, home". Use the `sm` size in every header and the footer.
+Wordmark: the mark plus a single-line lockup. "StudyBuddy" in Fraunces 600 at 20px, `ink`, tracking -0.01em. The whole lockup is one link to the home route with an `aria-label` of "StudyBuddy, home". Use the `sm` size in every header and the footer.
 
 Favicon: derived from the same mark, `viewBox="0 0 32 32"`. `paper` rounded square, the outlined back page in `accent`, the filled front page in `accent`, and the three rule lines in `on-accent`. Keep at least one page edge visible at 16px. No gradient, no shadow. Export a 180px touch icon from the same art. Check legibility at 16px before shipping.
 
@@ -349,7 +349,7 @@ Layout: marketing header, hero, how it works, product detail, closing action ban
 
 Header: wordmark left, "How it works" link, quiet "Log in" right. No primary action in the header.
 
-Hero: two columns at 1024px and up, 5 and 7. Left: 12px eyebrow "Study planner", H1 "Know what to study each day until the exam.", one 18px paragraph explaining the inputs and outputs, primary "Create your plan", quiet "See how it works". Right: a product frame (`surface`, 1px `border`, 8px radius, no shadow) showing the real schedule component with a progress bar, three task rows and one completed task. Use a real generated plan stored as a fixture, not hand-written numbers.
+Hero: two columns at 1024px and up, 5 and 7. Left: 12px eyebrow "Study schedule", H1 "Know what to study each day until the exam.", one 18px paragraph explaining the inputs and outputs, primary "Create your plan", quiet "See how it works". Right: a product frame (`surface`, 1px `border`, 8px radius, no shadow) showing the real schedule component with a progress bar, three task rows and one completed task. Use a real generated plan stored as a fixture, not hand-written numbers.
 
 How it works: three rows, not three cards. Each row is a 12-column split: number in Fraunces, short heading and two sentences, and a real UI fragment from the plan, quiz or flashcard screen. Alternate the UI side left and right. Copy:
 
@@ -361,7 +361,7 @@ Product detail section: one asymmetric split showing the schedule view at 7 colu
 
 Closing band: `sunken` background with 1px top and bottom borders, H2 "Start with one subject.", one sentence, primary "Create your plan".
 
-Footer: wordmark, "A study planner for the weeks before an exam.", links How it works, Terms, Privacy, and copyright.
+Footer: wordmark, "A study schedule for the weeks before an exam.", links How it works, Terms, Privacy, and copyright.
 
 Mobile: hero stacks with copy first and the product frame below. The frame scrolls horizontally only if needed, without page overflow. Sections become single column, UI fragments follow their copy.
 
@@ -482,7 +482,7 @@ No illustration, no mascot, no easter egg.
 - Deck empty: "No flashcards for this topic yet."
 - Delete confirmation: "Delete this plan? The schedule, quizzes and flashcards will be removed."
 
-Avoid: "Unlock your potential", "Study smarter, not harder", "Supercharge", "AI-powered learning companion", "Join thousands of students", "It is not just a planner, it is a new way to study."
+Avoid: "Unlock your potential", "Study smarter, not harder", "Supercharge", "AI-powered learning companion", "Join thousands of students", "It is not just a schedule, it is a new way to study."
 
 ## 8. Accessibility and quality checks
 

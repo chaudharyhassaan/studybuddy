@@ -102,7 +102,7 @@ export default function AppLayout() {
               <Wordmark size="sm" className="md:hidden" />
               <div className="hidden min-w-0 md:block">
                 <p className="text-label font-semibold uppercase tracking-[0.14em] text-ink-muted">
-                  StudyBuddy Planner
+                  StudyBuddy
                 </p>
                 <p className="truncate font-display text-h3 font-semibold text-ink">{pageTitle}</p>
               </div>

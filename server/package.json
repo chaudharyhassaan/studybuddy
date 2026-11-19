@@ -2,7 +2,7 @@
   "name": "studybuddy-server",
   "version": "0.1.0",
   "private": true,
-  "description": "StudyBuddy Planner API server.",
+  "description": "StudyBuddy API server.",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
