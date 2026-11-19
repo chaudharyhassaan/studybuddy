@@ -115,6 +115,19 @@ async function changeName(req, res, next) {
 
 async function deleteAccount(req, res, next) {
   try {
+    const { password } = req.body;
+    const user = await User.findById(req.user._id).select('+passwordHash');
+
+    if (!user) {
+      return invalidCredentials(res);
+    }
+
+    const matches = await bcrypt.compare(password, user.passwordHash);
+
+    if (!matches) {
+      return invalidPassword(res);
+    }
+
     await deleteAccountData(req.user._id);
     return res.status(204).send();
   } catch (error) {

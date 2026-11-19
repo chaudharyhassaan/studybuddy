@@ -13,6 +13,7 @@ const {
   registerSchema,
   loginSchema,
   changeNameSchema,
+  deleteAccountSchema,
 } = require('../validators/auth.validator');
 
 const router = Router();
@@ -23,6 +24,6 @@ router.post('/register', authLimiter, validate(registerSchema), register);
 router.post('/login', authLimiter, validate(loginSchema), login);
 router.get('/me', requireAuth, me);
 router.patch('/me', requireAuth, authLimiter, validate(changeNameSchema), changeName);
-router.delete('/me', requireAuth, deleteAccount);
+router.delete('/me', requireAuth, authLimiter, validate(deleteAccountSchema), deleteAccount);
 
 module.exports = router;

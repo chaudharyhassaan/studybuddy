@@ -46,4 +46,19 @@ const changeNameSchema = z
   })
   .strict();
 
-module.exports = { registerSchema, loginSchema, changeNameSchema };
+const deleteAccountSchema = z
+  .object({
+    password: currentPasswordSchema,
+    confirmation: z
+      .string({ error: 'Type DELETE to confirm.' })
+      .trim()
+      .refine((value) => value === 'DELETE', 'Type DELETE to confirm.'),
+  })
+  .strict();
+
+module.exports = {
+  registerSchema,
+  loginSchema,
+  changeNameSchema,
+  deleteAccountSchema,
+};
