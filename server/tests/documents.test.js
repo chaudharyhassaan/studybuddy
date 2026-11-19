@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { zipSync, strToU8 } = require('fflate');
 const {
   MAX_TEXT_CHARS,
+  MAX_UNZIPPED_BYTES,
   DocumentError,
   extractDocument,
   hasExpectedSignature,
@@ -150,6 +151,34 @@ test('a ZIP that is not a DOCX is rejected', async () => {
   await expectDocumentError(
     extractDocument({ originalname: 'fake.docx', buffer }),
     'invalid_archive',
+    422
+  );
+});
+
+test('a document that expands past the safe limit is rejected', async () => {
+  const buffer = Buffer.from(
+    zipSync({ 'word/document.xml': new Uint8Array(MAX_UNZIPPED_BYTES + 1) })
+  );
+
+  await expectDocumentError(
+    extractDocument({ originalname: 'bomb.docx', buffer }),
+    'archive_too_large',
+    422
+  );
+});
+
+test('a presentation with too many slides is rejected', async () => {
+  const entries = {};
+
+  for (let index = 1; index <= 101; index += 1) {
+    entries[`ppt/slides/slide${index}.xml`] = strToU8(
+      `<p:sld><a:p><a:r><a:t>Slide ${index}</a:t></a:r></a:p></p:sld>`
+    );
+  }
+
+  await expectDocumentError(
+    extractDocument({ originalname: 'long.pptx', buffer: Buffer.from(zipSync(entries)) }),
+    'too_many_slides',
     422
   );
 });

@@ -4,6 +4,7 @@ const { unzipSync } = require('fflate');
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const MAX_TEXT_CHARS = 16000;
 const MAX_PDF_PAGES = 60;
+const MAX_SLIDES = 100;
 const MIN_PDF_TEXT_CHARS = 10;
 const MAX_UNZIPPED_BYTES = 32 * 1024 * 1024;
 const PDF_TIMEOUT_MS = 25000;
@@ -117,6 +118,7 @@ function readZipEntry(parts, name) {
 
 function unzipXml(buffer, accepts) {
   let parts;
+  let unpackedBytes = 0;
 
   try {
     parts = unzipSync(new Uint8Array(buffer), {
@@ -125,7 +127,9 @@ function unzipXml(buffer, accepts) {
           return false;
         }
 
-        if (file.originalSize > MAX_UNZIPPED_BYTES) {
+        unpackedBytes += file.originalSize;
+
+        if (file.originalSize > MAX_UNZIPPED_BYTES || unpackedBytes > MAX_UNZIPPED_BYTES) {
           throw new DocumentError(
             'archive_too_large',
             'That file expands to too much data to read safely.',
@@ -184,6 +188,14 @@ function extractPptxText(buffer) {
     throw new DocumentError(
       'invalid_archive',
       'That file does not contain any slides.',
+      422
+    );
+  }
+
+  if (slideNames.length > MAX_SLIDES) {
+    throw new DocumentError(
+      'too_many_slides',
+      `Presentations with more than ${MAX_SLIDES} slides are not supported yet.`,
       422
     );
   }
@@ -370,6 +382,7 @@ async function extractDocument({ originalname, buffer }) {
 module.exports = {
   MAX_FILE_BYTES,
   MAX_TEXT_CHARS,
+  MAX_UNZIPPED_BYTES,
   DocumentError,
   extractDocument,
   // Exported for unit tests.
